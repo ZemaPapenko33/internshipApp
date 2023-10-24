@@ -21,3 +21,13 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+.idea
+.storybook
+.config
+node_modules/*
+config/*
+public/*
+scripts/*
+src/react-app-env.d.ts
+src/reportWebVitals.ts
