@@ -1,6 +1,6 @@
 import React, { FormEvent } from 'react';
 import { Link } from 'react-router-dom';
-import useRegisterPage from '../hooks/use-register-page';
+import useRegisterPage from '../hooks/use-register-page.hook';
 
 function RegisterPage(): JSX.Element {
   const {
@@ -11,11 +11,12 @@ function RegisterPage(): JSX.Element {
     emailInputHandler,
     passwordInputHandler
   } = useRegisterPage();
+
   return (
     <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">
       <form
         className="flex flex-col items-center justify-center"
-        onSubmit={(e: FormEvent) => formHandler(e)}
+        onSubmit={(event: FormEvent) => formHandler(event)}
       >
         <input
           name="email"

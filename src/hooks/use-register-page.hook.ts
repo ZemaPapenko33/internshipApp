@@ -17,8 +17,8 @@ function useRegisterPage() {
   const [isUseEmail, setIsUseEmail] = useState(false);
   const navigateToLogIn = useNavigate();
 
-  const formHandler = (e: FormEvent) => {
-    e.preventDefault();
+  const formHandler = (event: FormEvent) => {
+    event.preventDefault();
     if (password.length < PASSWORD_LENGTH_MIN) {
       setPasswordLength(true);
     } else {
@@ -29,12 +29,12 @@ function useRegisterPage() {
           setIsUseEmail(false);
           navigateToLogIn('/');
         })
-        .catch((err) => {
-          if (err.code === EnumErrors.EMAIL_ALREADY_IN_USE) {
+        .catch((error) => {
+          if (error.code === EnumErrors.EMAIL_ALREADY_IN_USE) {
             setIsUseEmail(true);
             setIsInvalidEmail(false);
             setPasswordLength(false);
-          } else if (err.code === EnumErrors.INVALID_EMAIL) {
+          } else if (error.code === EnumErrors.INVALID_EMAIL) {
             setIsInvalidEmail(true);
             setIsUseEmail(false);
             setPasswordLength(false);
@@ -45,15 +45,15 @@ function useRegisterPage() {
     }
   };
 
-  const emailInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const emailInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsInvalidEmail(false);
     setIsUseEmail(false);
-    setEmail(e.target.value);
+    setEmail(event.target.value);
   };
 
-  const passwordInputHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const passwordInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPasswordLength(false);
-    setPassword(e.target.value);
+    setPassword(event.target.value);
   };
 
   return {
