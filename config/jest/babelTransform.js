@@ -10,7 +10,7 @@ const hasJsxRuntime = (() => {
   try {
     require.resolve('react/jsx-runtime');
     return true;
-  } catch (e) {
+  } catch (error) {
     return false;
   }
 })();
@@ -20,10 +20,10 @@ module.exports = babelJest.createTransformer({
     [
       require.resolve('babel-preset-react-app'),
       {
-        runtime: hasJsxRuntime ? 'automatic' : 'classic',
-      },
-    ],
+        runtime: hasJsxRuntime ? 'automatic' : 'classic'
+      }
+    ]
   ],
   babelrc: false,
-  configFile: false,
+  configFile: false
 });
