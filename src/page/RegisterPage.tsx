@@ -14,10 +14,7 @@ function RegisterPage(): JSX.Element {
 
   return (
     <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">
-      <form
-        className="flex flex-col items-center justify-center"
-        onSubmit={(event: FormEvent) => formHandler(event)}
-      >
+      <form className="flex flex-col items-center justify-center" onSubmit={formHandler}>
         <input
           name="email"
           type="email"
