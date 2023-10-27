@@ -3,18 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
 import { PASSWORD_LENGTH_MIN } from '../shared/consts/authorization';
+import { EnumErrors } from '../shared/consts/enum';
 
-enum EnumErrors {
-  EMAIL_ALREADY_IN_USE = 'auth/email-already-in-use',
-  INVALID_EMAIL = 'auth/invalid-email'
+interface IRegisterPageHook {
+  email: string;
+  password: string;
+  isInvalidEmail: boolean;
+  passwordLength: boolean;
+  isUseEmail: boolean;
+  formHandler: (event: FormEvent) => void;
+  emailInputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  passwordInputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-function useRegisterPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [isInvalidEmail, setIsInvalidEmail] = useState(false);
-  const [passwordLength, setPasswordLength] = useState(false);
-  const [isUseEmail, setIsUseEmail] = useState(false);
+function useRegisterPage(): IRegisterPageHook {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
+  const [passwordLength, setPasswordLength] = useState<boolean>(false);
+  const [isUseEmail, setIsUseEmail] = useState<boolean>(false);
   const navigateToLogIn = useNavigate();
 
   const formHandler = (event: FormEvent) => {

@@ -1,4 +1,4 @@
-import React, { FormEvent } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import useRegisterPage from '../hooks/use-register-page.hook';
 

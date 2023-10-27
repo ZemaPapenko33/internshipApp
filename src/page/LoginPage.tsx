@@ -36,10 +36,10 @@ function LoginPage(): JSX.Element {
         <span className="mx-2 text-gray-500">OR</span>
         <div className="h-px bg-gray-400 w-16"></div>
       </div>
-      <button className="rounded bg-yellow-500 w-[270px] h-[30px] mb-3">
+      <button className="rounded bg-yellow-500 shadow-lg w-[270px] h-[30px] mb-3 hover:shadow-xl">
         authorization with google
       </button>
-      <button className="rounded bg-[#000] text-white w-[270px] h-[30px]">
+      <button className="rounded bg-[#000] text-white  shadow-lg w-[270px] h-[30px] hover:shadow-xl">
         authorization with github
       </button>
     </div>
