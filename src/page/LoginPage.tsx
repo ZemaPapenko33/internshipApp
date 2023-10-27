@@ -1,26 +1,33 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import useRegisterPage from '../hooks/use-register-page.hook';
+import useLoginPage from '../hooks/use-login-page.hook';
 
 function LoginPage(): JSX.Element {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
+  const { email, password, emailInputHandler, passwordInputHandler } = useRegisterPage();
+  const { formHandler, isLoginCredential, isMissingPassword } = useLoginPage(email, password);
+
   return (
     <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">
-      <form className="flex flex-col items-center justify-center mb-3">
+      <form className="flex flex-col items-center justify-center mb-3" onSubmit={formHandler}>
         <input
           name="email"
           type="email"
           placeholder="Email"
           className="mb-3 rounded px-2 shadow-lg h-[30px] w-[270px] border-2"
-          // onChange={(e) => setEmail(e.target.value)}
+          onChange={emailInputHandler}
         />
         <input
           name="password"
           type="password"
           placeholder="Password"
           className="mb-2  rounded px-2 shadow-lg h-[30px] w-[270px] border-2"
-          // onChange={(e) => setPassword(e.target.value)}
+          onChange={passwordInputHandler}
         />
+        {isMissingPassword && <p className="text-red-500 text-sm">Please, enter password</p>}
+        {isLoginCredential && (
+          <p className="text-red-500 text-sm">login or password entered incorrectly</p>
+        )}
         <p className="italic text-gray-500 mb-2">
           don't have an account?{' '}
           <Link to="/register" className="underline decoration-zinc-500 text-zinc-950">
