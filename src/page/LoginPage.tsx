@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import useRegisterPage from '../hooks/use-register-page.hook';
 import useLoginPage from '../hooks/use-login-page.hook';
+import { useForm } from '../context';
 
 function LoginPage(): JSX.Element {
-  const { email, password, emailInputHandler, passwordInputHandler } = useRegisterPage();
+  const { email, password, emailInputHandler, passwordInputHandler } = useForm();
   const { formHandler, isLoginCredential, isMissingPassword } = useLoginPage(email, password);
 
   return (

@@ -13,8 +13,8 @@ interface ILoginPageHook {
 function useLoginPage(email: string, password: string): ILoginPageHook {
   const [isMissingPassword, setIsMissingPassword] = useState<boolean>(false);
   const [isLoginCredential, setIsLoginCredential] = useState<boolean>(false);
-
   const navigateToHomePage = useNavigate();
+
   const formHandler = (event: FormEvent) => {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
