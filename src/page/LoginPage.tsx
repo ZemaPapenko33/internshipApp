@@ -5,7 +5,13 @@ import { useForm } from '../context';
 
 function LoginPage(): JSX.Element {
   const { email, password, emailInputHandler, passwordInputHandler } = useForm();
-  const { formHandler, isLoginCredential, isMissingPassword } = useLoginPage(email, password);
+  const {
+    formHandler,
+    isLoginCredential,
+    isMissingPassword,
+    googleButtonHandler,
+    githubButtonHandler
+  } = useLoginPage(email, password);
 
   return (
     <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">
@@ -43,10 +49,16 @@ function LoginPage(): JSX.Element {
         <span className="mx-2 text-gray-500">OR</span>
         <div className="h-px bg-gray-400 w-16"></div>
       </div>
-      <button className="rounded bg-yellow-500 shadow-lg w-[270px] h-[30px] mb-3 hover:shadow-xl">
+      <button
+        className="rounded bg-yellow-500 shadow-lg w-[270px] h-[30px] mb-3 hover:shadow-xl"
+        onClick={googleButtonHandler}
+      >
         authorization with google
       </button>
-      <button className="rounded bg-[#000] text-white  shadow-lg w-[270px] h-[30px] hover:shadow-xl">
+      <button
+        className="rounded bg-[#000] text-white  shadow-lg w-[270px] h-[30px] hover:shadow-xl"
+        onClick={githubButtonHandler}
+      >
         authorization with github
       </button>
     </div>
