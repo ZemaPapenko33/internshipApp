@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 interface IFormContext {
+  createTodo: boolean;
   email: string;
   password: string;
   isInvalidEmail: boolean;
   passwordLength: boolean;
   isUseEmail: boolean;
+  setCreateTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
   setIsInvalidEmail: React.Dispatch<React.SetStateAction<boolean>>;
@@ -22,6 +24,7 @@ interface FormProviderProps {
 const FormContext = createContext<IFormContext | undefined>(undefined);
 
 export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
+  const [createTodo, setCreateTodo] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
@@ -42,11 +45,13 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   return (
     <FormContext.Provider
       value={{
+        createTodo,
         email,
         password,
         isInvalidEmail,
         passwordLength,
         isUseEmail,
+        setCreateTodo,
         setEmail,
         setPassword,
         setIsInvalidEmail,

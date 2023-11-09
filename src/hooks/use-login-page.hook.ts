@@ -31,6 +31,37 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
         }
       });
   };
+<<<<<<< Updated upstream
   return { isMissingPassword, isLoginCredential, formHandler };
+=======
+
+  const googleButtonHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const provider = new GoogleAuthProvider();
+
+    auth.useDeviceLanguage();
+
+    signInWithPopup(auth, provider).then(() => {
+      navigateToHomePage('/');
+    });
+  };
+
+  const githubButtonHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const provider = new GithubAuthProvider();
+    auth.useDeviceLanguage();
+    signInWithPopup(auth, provider).then(() => {
+      navigateToHomePage('/');
+    });
+  };
+
+  return {
+    isMissingPassword,
+    isLoginCredential,
+    formHandler,
+    googleButtonHandler,
+    githubButtonHandler
+  };
+>>>>>>> Stashed changes
 }
 export default useLoginPage;

@@ -30,11 +30,6 @@ function useRegisterPage(): IRegisterPageHook {
     emailInputHandler,
     passwordInputHandler
   } = useForm();
-  // const [email, setEmail] = useState<string>('');
-  // const [password, setPassword] = useState<string>('');
-  // const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
-  // const [passwordLength, setPasswordLength] = useState<boolean>(false);
-  // const [isUseEmail, setIsUseEmail] = useState<boolean>(false);
   const navigateToLogIn = useNavigate();
 
   const formHandler = (event: FormEvent) => {
