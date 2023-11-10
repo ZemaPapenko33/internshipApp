@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
+import useHomePage from '../hooks/use-home-page.hook';
 
 function HomePage(): JSX.Element {
   const {

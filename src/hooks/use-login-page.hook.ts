@@ -38,9 +38,6 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
         }
       });
   };
-<<<<<<< Updated upstream
-  return { isMissingPassword, isLoginCredential, formHandler };
-=======
 
   const googleButtonHandler = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -69,6 +66,5 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     googleButtonHandler,
     githubButtonHandler
   };
->>>>>>> Stashed changes
 }
 export default useLoginPage;
