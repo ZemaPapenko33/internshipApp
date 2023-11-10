@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from '../components/Header';
+import useHomePage from '../hooks/use-home-page.hook';
 
 function HomePage(): JSX.Element {
   const {
@@ -76,7 +77,7 @@ function HomePage(): JSX.Element {
           3
         </div>
       </div>
-      {createTodo && alert('check')}
+      {createTodo && <div className="w-screen h-screen bg-black"></div>}
     </>
   );
 }

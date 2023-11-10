@@ -7,11 +7,19 @@ import useHomePage from '../hooks/use-home-page.hook';
 function Header() {
   const { setCreateTodo } = useHomePage();
   const navigateToLoginPage = useNavigate();
+
   const logOutHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     signOut(auth).then(() => {
       navigateToLoginPage('/login');
     });
+  };
+
+  const createButtonHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (setCreateTodo) {
+      setCreateTodo(true);
+    }
   };
 
   return (
@@ -23,11 +31,7 @@ function Header() {
       ></input>
       <button
         className="rounded bg-white h-[30px] w-[270px] hover:bg-black hover:text-white"
-        onClick={() => {
-          if (setCreateTodo) {
-            setCreateTodo(true);
-          }
-        }}
+        onClick={createButtonHandler}
       >
         Create
       </button>
