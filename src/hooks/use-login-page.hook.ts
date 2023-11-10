@@ -38,14 +38,18 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
         }
       });
   };
+
   const googleButtonHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     const provider = new GoogleAuthProvider();
+
     auth.useDeviceLanguage();
+
     signInWithPopup(auth, provider).then(() => {
       navigateToHomePage('/');
     });
   };
+
   const githubButtonHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     const provider = new GithubAuthProvider();
@@ -54,6 +58,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
       navigateToHomePage('/');
     });
   };
+
   return {
     isMissingPassword,
     isLoginCredential,
