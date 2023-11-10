@@ -77,7 +77,7 @@ function HomePage(): JSX.Element {
           3
         </div>
       </div>
-      {createTodo && alert('check')}
+      {createTodo && <div className="w-screen h-screen bg-black"></div>}
     </>
   );
 }
