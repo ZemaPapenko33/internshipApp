@@ -3,6 +3,9 @@ import { useForm } from '../context';
 
 interface IHomePageHook {
   idTarget: string;
+  textareaValue: string;
+  selectValue: string;
+  titleValue: string;
   setIdTarget: React.Dispatch<React.SetStateAction<string>>;
   dragStartHandler: (event: React.DragEvent<HTMLDivElement>) => void;
   dragEndHandler: (event: React.DragEvent<HTMLDivElement>) => void;
@@ -13,11 +16,18 @@ interface IHomePageHook {
   createTodo?: boolean;
   setCreateTodo?: React.Dispatch<React.SetStateAction<boolean>>;
   closeButtonHandler: (event: React.MouseEvent) => void;
+  titleInputChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  textareaChangeHandler: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
+  selectChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 function useHomePage(): IHomePageHook {
   const { createTodo, setCreateTodo } = useForm();
-  const [idTarget, setIdTarget] = useState('');
+  const [idTarget, setIdTarget] = useState<string>('');
+  const [textareaValue, setTextareaValue] = useState<string>('');
+  const [selectValue, setSelectValue] = useState<string>('Low');
+  const [titleValue, setTitleValue] = useState<string>('');
+
   const dragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
     setTimeout(() => {
       const target = event.target as HTMLDivElement;
@@ -25,6 +35,7 @@ function useHomePage(): IHomePageHook {
       target.classList.add('hidden');
     }, 0);
   };
+
   const dragEndHandler = (event: React.DragEvent<HTMLDivElement>) => {
     const target = event.target as HTMLDivElement;
     target.classList.remove('hidden');
@@ -60,6 +71,16 @@ function useHomePage(): IHomePageHook {
     setCreateTodo(false);
   };
 
+  const titleInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTitleValue(event.target.value);
+  };
+  const textareaChangeHandler = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setTextareaValue(event.target.value);
+  };
+  const selectChangeHandler = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectValue(event.target.value);
+  };
+
   return {
     idTarget,
     setIdTarget,
@@ -71,7 +92,13 @@ function useHomePage(): IHomePageHook {
     dragDropHandler,
     createTodo,
     setCreateTodo,
-    closeButtonHandler
+    closeButtonHandler,
+    textareaChangeHandler,
+    selectChangeHandler,
+    titleInputChangeHandler,
+    textareaValue,
+    titleValue,
+    selectValue
   };
 }
 

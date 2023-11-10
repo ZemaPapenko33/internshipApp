@@ -60,17 +60,6 @@ function useRegisterPage(): IRegisterPageHook {
     }
   };
 
-  // const emailInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setIsInvalidEmail(false);
-  //   setIsUseEmail(false);
-  //   setEmail(event.target.value);
-  // };
-
-  // const passwordInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   setPasswordLength(false);
-  //   setPassword(event.target.value);
-  // };
-
   return {
     email,
     password,
