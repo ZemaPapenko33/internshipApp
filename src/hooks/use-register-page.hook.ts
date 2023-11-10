@@ -1,9 +1,10 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
 import { PASSWORD_LENGTH_MIN } from '../shared/consts/authorization';
 import { EnumErrors } from '../shared/consts/enum';
+import { useForm } from '../context';
 
 interface IRegisterPageHook {
   email: string;
@@ -17,11 +18,18 @@ interface IRegisterPageHook {
 }
 
 function useRegisterPage(): IRegisterPageHook {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [isInvalidEmail, setIsInvalidEmail] = useState<boolean>(false);
-  const [passwordLength, setPasswordLength] = useState<boolean>(false);
-  const [isUseEmail, setIsUseEmail] = useState<boolean>(false);
+  const {
+    email,
+    password,
+    isInvalidEmail,
+    passwordLength,
+    isUseEmail,
+    setIsInvalidEmail,
+    setIsUseEmail,
+    setPasswordLength,
+    emailInputHandler,
+    passwordInputHandler
+  } = useForm();
   const navigateToLogIn = useNavigate();
 
   const formHandler = (event: FormEvent) => {
@@ -52,16 +60,16 @@ function useRegisterPage(): IRegisterPageHook {
     }
   };
 
-  const emailInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setIsInvalidEmail(false);
-    setIsUseEmail(false);
-    setEmail(event.target.value);
-  };
+  // const emailInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setIsInvalidEmail(false);
+  //   setIsUseEmail(false);
+  //   setEmail(event.target.value);
+  // };
 
-  const passwordInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPasswordLength(false);
-    setPassword(event.target.value);
-  };
+  // const passwordInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   setPasswordLength(false);
+  //   setPassword(event.target.value);
+  // };
 
   return {
     email,
