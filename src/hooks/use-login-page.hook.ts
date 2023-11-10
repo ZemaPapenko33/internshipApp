@@ -1,5 +1,10 @@
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FormEvent, useState } from 'react';
+import {
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup
+} from 'firebase/auth';
+import React, { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
 import { EnumErrors } from '../shared/consts/enum';
@@ -8,6 +13,8 @@ interface ILoginPageHook {
   isMissingPassword: boolean;
   isLoginCredential: boolean;
   formHandler: (event: FormEvent) => void;
+  googleButtonHandler: (event: React.MouseEvent) => void;
+  githubButtonHandler: (event: React.MouseEvent) => void;
 }
 
 function useLoginPage(email: string, password: string): ILoginPageHook {
@@ -31,9 +38,6 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
         }
       });
   };
-<<<<<<< Updated upstream
-  return { isMissingPassword, isLoginCredential, formHandler };
-=======
 
   const googleButtonHandler = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -62,6 +66,5 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     googleButtonHandler,
     githubButtonHandler
   };
->>>>>>> Stashed changes
 }
 export default useLoginPage;
