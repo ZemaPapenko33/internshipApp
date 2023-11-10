@@ -12,6 +12,7 @@ interface IHomePageHook {
   dragDropHandler: (event: React.DragEvent<HTMLDivElement>) => void;
   createTodo?: boolean;
   setCreateTodo?: React.Dispatch<React.SetStateAction<boolean>>;
+  closeButtonHandler: (event: React.MouseEvent) => void;
 }
 
 function useHomePage(): IHomePageHook {
@@ -54,6 +55,11 @@ function useHomePage(): IHomePageHook {
     }
   };
 
+  const closeButtonHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setCreateTodo(false);
+  };
+
   return {
     idTarget,
     setIdTarget,
@@ -64,7 +70,8 @@ function useHomePage(): IHomePageHook {
     dragLeaveHandler,
     dragDropHandler,
     createTodo,
-    setCreateTodo
+    setCreateTodo,
+    closeButtonHandler
   };
 }
 
