@@ -27,6 +27,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         localStorage.setItem('user', email);
+        localStorage.setItem('email', email);
         navigateToHomePage('/');
       })
       .catch((error) => {
@@ -48,6 +49,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
 
     signInWithPopup(auth, provider).then((result) => {
       localStorage.setItem('user', JSON.stringify(result.user));
+      localStorage.setItem('email', `${result.user.email}`);
       navigateToHomePage('/');
     });
   };
@@ -58,6 +60,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     auth.useDeviceLanguage();
     signInWithPopup(auth, provider).then((result) => {
       localStorage.setItem('user', JSON.stringify(result.user));
+      localStorage.setItem('email', `${result.user.email}`);
       navigateToHomePage('/');
     });
   };

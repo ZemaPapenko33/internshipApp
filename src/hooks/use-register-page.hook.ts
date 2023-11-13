@@ -43,6 +43,7 @@ function useRegisterPage(): IRegisterPageHook {
           setIsInvalidEmail(false);
           setIsUseEmail(false);
           localStorage.setItem('user', email);
+          localStorage.setItem('email', email);
           navigateToLogIn('/');
         })
         .catch((error) => {

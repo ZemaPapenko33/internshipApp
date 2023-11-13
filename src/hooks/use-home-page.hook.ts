@@ -6,6 +6,7 @@ interface IHomePageHook {
   textareaValue: string;
   selectValue: string;
   titleValue: string;
+  isLoaded: boolean;
   setIdTarget: React.Dispatch<React.SetStateAction<string>>;
   dragStartHandler: (event: React.DragEvent<HTMLDivElement>) => void;
   dragEndHandler: (event: React.DragEvent<HTMLDivElement>) => void;
@@ -19,9 +20,11 @@ interface IHomePageHook {
   titleInputChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   textareaChangeHandler: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   selectChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 function useHomePage(): IHomePageHook {
+  const [isLoaded, setIsLoaded] = useState<boolean>(true);
   const { createTodo, setCreateTodo } = useForm();
   const [idTarget, setIdTarget] = useState<string>('');
   const [textareaValue, setTextareaValue] = useState<string>('');
@@ -98,7 +101,9 @@ function useHomePage(): IHomePageHook {
     titleInputChangeHandler,
     textareaValue,
     titleValue,
-    selectValue
+    selectValue,
+    isLoaded,
+    setIsLoaded
   };
 }
 
