@@ -11,7 +11,7 @@ function HomePage(): JSX.Element {
     dragLeaveHandler,
     dragDropHandler,
     createTodo,
-    closeButtonHandler
+    setCreateTodo
   } = useHomePage();
 
   return (
@@ -100,7 +100,11 @@ function HomePage(): JSX.Element {
                 <div>
                   <button
                     className=" mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                    onClick={closeButtonHandler}
+                    onClick={() => {
+                      if (setCreateTodo) {
+                        setCreateTodo(false);
+                      }
+                    }}
                   >
                     Close
                   </button>
