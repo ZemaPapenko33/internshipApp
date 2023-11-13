@@ -53,6 +53,7 @@ function HomePage(): JSX.Element {
               onDragLeave={dragLeaveHandler}
               onDrop={dragDropHandler}
             >
+              <h1 className="bg-white mb-2 px-4">{item}</h1>
               <div
                 className="flex flex-col py-2 px-4 w-full h-[150px] bg-white mb-2 "
                 draggable={true}

@@ -11,6 +11,7 @@ function Header() {
   const logOutHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     signOut(auth).then(() => {
+      localStorage.removeItem('user');
       navigateToLoginPage('/login');
     });
   };

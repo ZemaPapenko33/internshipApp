@@ -26,6 +26,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     event.preventDefault();
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
+        localStorage.setItem('user', email);
         navigateToHomePage('/');
       })
       .catch((error) => {
@@ -45,7 +46,8 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
 
     auth.useDeviceLanguage();
 
-    signInWithPopup(auth, provider).then(() => {
+    signInWithPopup(auth, provider).then((result) => {
+      localStorage.setItem('user', JSON.stringify(result.user));
       navigateToHomePage('/');
     });
   };
@@ -54,7 +56,8 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     event.preventDefault();
     const provider = new GithubAuthProvider();
     auth.useDeviceLanguage();
-    signInWithPopup(auth, provider).then(() => {
+    signInWithPopup(auth, provider).then((result) => {
+      localStorage.setItem('user', JSON.stringify(result.user));
       navigateToHomePage('/');
     });
   };
