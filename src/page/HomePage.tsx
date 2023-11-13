@@ -4,6 +4,7 @@ import useHomePage from '../hooks/use-home-page.hook';
 import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
+import { EnumImportance } from '../shared/consts/enum';
 
 function HomePage(): JSX.Element {
   const blocks = ['Назначено', 'В процессе', 'Закончен'];
@@ -17,7 +18,6 @@ function HomePage(): JSX.Element {
     dragDropHandler,
     createTodo,
     setCreateTodo,
-    closeButtonHandler,
     selectValue,
     titleValue,
     textareaValue,
@@ -140,11 +140,11 @@ function HomePage(): JSX.Element {
                   onChange={selectChangeHandler}
                   value={selectValue}
                 >
-                  <option value="Low" selected>
+                  <option value={EnumImportance.LOW} selected>
                     Low
                   </option>
-                  <option value="Medium">Medium</option>
-                  <option value="High">High</option>
+                  <option value={EnumImportance.MEDIUM}>Medium</option>
+                  <option value={EnumImportance.HIGH}>High</option>
                 </select>
                 <div>
                   <button

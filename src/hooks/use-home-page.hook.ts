@@ -16,7 +16,6 @@ interface IHomePageHook {
   dragDropHandler: (event: React.DragEvent<HTMLDivElement>) => void;
   createTodo?: boolean;
   setCreateTodo?: React.Dispatch<React.SetStateAction<boolean>>;
-  closeButtonHandler: (event: React.MouseEvent) => void;
   titleInputChangeHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   textareaChangeHandler: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   selectChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
@@ -69,11 +68,6 @@ function useHomePage(): IHomePageHook {
     }
   };
 
-  const closeButtonHandler = (event: React.MouseEvent) => {
-    event.preventDefault();
-    setCreateTodo(false);
-  };
-
   const titleInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTitleValue(event.target.value);
   };
@@ -95,7 +89,6 @@ function useHomePage(): IHomePageHook {
     dragDropHandler,
     createTodo,
     setCreateTodo,
-    closeButtonHandler,
     textareaChangeHandler,
     selectChangeHandler,
     titleInputChangeHandler,
