@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import useHomePage from '../hooks/use-home-page.hook';
 import { addDoc, collection } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { useForm } from '../context';
+import { useNavigate } from 'react-router-dom';
 
 function HomePage(): JSX.Element {
   const blocks = ['Назначено', 'В процессе', 'Закончен'];
@@ -25,6 +26,8 @@ function HomePage(): JSX.Element {
     textareaChangeHandler,
     selectChangeHandler
   } = useHomePage();
+  const navigateToLoginPage = useNavigate();
+  const user = localStorage.getItem('user');
 
   const submitButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
@@ -38,6 +41,12 @@ function HomePage(): JSX.Element {
       setCreateTodo(false);
     }
   };
+
+  useEffect(() => {
+    if (!user) {
+      navigateToLoginPage('/login');
+    }
+  }, [user]);
 
   return (
     <>
