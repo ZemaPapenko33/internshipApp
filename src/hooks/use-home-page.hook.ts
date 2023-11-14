@@ -45,24 +45,31 @@ function useHomePage(): IHomePageHook {
 
   const dragOverHandler = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log('dragOver');
   };
 
   const dragEnterHandler = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log('dragEnetr');
   };
 
   const dragLeaveHandler = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
-    console.log('dragLeave');
   };
 
   const dragDropHandler = (event: React.DragEvent<HTMLDivElement>) => {
     const data = idTarget;
     const draggedElement = document.getElementById(data);
     const target = event.target as HTMLDivElement;
-
+    const dataStatus = target.getAttribute('data-status');
+    console.log(dataStatus);
+    if (dataStatus == 'Закончен') {
+      draggedElement?.classList.remove('bg-white');
+      draggedElement?.classList.add('bg-gray-500');
+      draggedElement?.classList.add('line-through');
+    } else {
+      draggedElement?.classList.remove('line-through');
+      draggedElement?.classList.remove('bg-gray-500');
+      draggedElement?.classList.add('bg-white');
+    }
     if (draggedElement) {
       target.append(draggedElement);
     }
