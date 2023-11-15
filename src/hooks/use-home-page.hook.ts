@@ -1,5 +1,7 @@
+import { doc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useForm } from '../context';
+import { db } from '../firebase/firebaseConfig';
 
 interface IHomePageHook {
   idTarget: string;
@@ -56,7 +58,7 @@ function useHomePage(): IHomePageHook {
     event.preventDefault();
   };
 
-  const dragDropHandler = (event: React.DragEvent<HTMLDivElement>) => {
+  const dragDropHandler = async (event: React.DragEvent<HTMLDivElement>) => {
     const data = idTarget;
     const draggedElement = document.getElementById(data);
     const target = event.target as HTMLDivElement;
@@ -74,6 +76,11 @@ function useHomePage(): IHomePageHook {
     if (draggedElement) {
       target.append(draggedElement);
     }
+    const id = draggedElement?.id as string;
+    const updateDocRef = doc(db, 'todo', id);
+    await updateDoc(updateDocRef, {
+      Status: `${dataStatus}`
+    });
   };
 
   const titleInputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {

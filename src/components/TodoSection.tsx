@@ -1,4 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
+import { selectFilteredTodos } from '../store/selectors/selectors';
+import Todo from './Todo';
 
 interface ITodoSectionProps {
   item: string;
@@ -7,6 +11,8 @@ interface ITodoSectionProps {
   dragOverHandler: (event: React.DragEvent<HTMLDivElement>) => void;
   dragLeaveHandler: (event: React.DragEvent<HTMLDivElement>) => void;
   dragDropHandler: (event: React.DragEvent<HTMLDivElement>) => void;
+  dragStartHandler: (event: React.DragEvent<HTMLDivElement>) => void;
+  dragEndHandler: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
 const TodoSection: React.FC<ITodoSectionProps> = ({
@@ -15,19 +21,38 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
   dragEnterHandler,
   dragOverHandler,
   dragLeaveHandler,
-  dragDropHandler
+  dragDropHandler,
+  dragStartHandler,
+  dragEndHandler
 }) => {
+  const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
   return (
-    <div
-      key={index}
-      className="rounded shadow-lg w-[300px] min-h-full bg-yellow-500 py-1 px-4 mr-10"
-      onDragEnter={dragEnterHandler}
-      onDragOver={dragOverHandler}
-      onDragLeave={dragLeaveHandler}
-      onDrop={dragDropHandler}
-      data-status={item}
-    >
-      <h1 className="bg-white shadow-lg mb-2 px-4">{item}</h1>
+    <div className="flex flex-col w-full h-full items-center justify-center py-10">
+      <h1 className="bg-white shadow-lg mb-2 px-4 w-[300px]">{item}</h1>
+      <div
+        key={index}
+        className="rounded shadow-lg w-[300px] min-h-full bg-yellow-500 py-1 px-4  overflow-y-scroll"
+        onDragEnter={dragEnterHandler}
+        onDragOver={dragOverHandler}
+        onDragLeave={dragLeaveHandler}
+        onDrop={dragDropHandler}
+        data-status={item}
+      >
+        {filterTodo.map((newItem, newIndex) => {
+          return (
+            <Todo
+              key={newIndex}
+              index={newItem.id}
+              status={newItem.status}
+              title={newItem.title}
+              description={newItem.description}
+              importance={newItem.importance}
+              dragStartHandler={dragStartHandler}
+              dragEndHandler={dragEndHandler}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 };

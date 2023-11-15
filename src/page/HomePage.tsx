@@ -7,9 +7,8 @@ import { useNavigate } from 'react-router-dom';
 import { EnumImportance } from '../shared/consts/enum';
 import TodoSection from '../components/TodoSection';
 import Loader from '../components/Loader';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
-import { RootState } from '../store';
 
 // import Todo from '../components/Todo';
 
@@ -17,8 +16,8 @@ function HomePage(): JSX.Element {
   const blocks = ['Назначено', 'В процессе', 'Закончен'];
   const email = localStorage.getItem('email');
   const {
-    // dragStartHandler,
-    // dragEndHandler,
+    dragStartHandler,
+    dragEndHandler,
     dragOverHandler,
     dragEnterHandler,
     dragLeaveHandler,
@@ -34,7 +33,6 @@ function HomePage(): JSX.Element {
     isLoaded,
     setIsLoaded
   } = useHomePage();
-  const todos = useSelector((state: RootState) => state.todoSlice.todos);
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
   const dispatch = useDispatch();
@@ -84,10 +82,6 @@ function HomePage(): JSX.Element {
     getDataHandler();
   }, []);
 
-  useEffect(() => {
-    console.log(todos);
-  }, [todos]);
-
   return (
     <>
       <Header />
@@ -103,6 +97,8 @@ function HomePage(): JSX.Element {
               dragOverHandler={dragOverHandler}
               dragLeaveHandler={dragLeaveHandler}
               dragDropHandler={dragDropHandler}
+              dragStartHandler={dragStartHandler}
+              dragEndHandler={dragEndHandler}
             />
           );
         })}
