@@ -7,6 +7,10 @@ import { useNavigate } from 'react-router-dom';
 import { EnumImportance } from '../shared/consts/enum';
 import TodoSection from '../components/TodoSection';
 import Loader from '../components/Loader';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTodo, setTodo } from '../store/slices/todoSlice';
+import { RootState } from '../store';
+
 // import Todo from '../components/Todo';
 
 function HomePage(): JSX.Element {
@@ -30,8 +34,29 @@ function HomePage(): JSX.Element {
     isLoaded,
     setIsLoaded
   } = useHomePage();
+  const todos = useSelector((state: RootState) => state.todoSlice.todos);
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
+  const dispatch = useDispatch();
+
+  const getDataHandler = async () => {
+    dispatch(setTodo([]));
+    const todoRef = collection(db, 'todo');
+    const q = query(todoRef, where('Email', '==', `${email?.toLocaleLowerCase()}`));
+    const Snapshot = await getDocs(q);
+    Snapshot.forEach((doc) => {
+      const { Title, Description, Importance, Status } = doc.data();
+      const todo = {
+        title: Title,
+        description: Description,
+        importance: Importance,
+        status: Status,
+        id: doc.id
+      };
+      dispatch(addTodo(todo));
+    });
+    setIsLoaded(false);
+  };
 
   const submitButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
@@ -42,21 +67,11 @@ function HomePage(): JSX.Element {
       Email: `${email?.toLocaleLowerCase()}`,
       Status: 'Назначено'
     });
+    getDataHandler();
+    setIsLoaded(true);
     if (setCreateTodo) {
       setCreateTodo(false);
     }
-  };
-  const getDataHandler = async () => {
-    const todoRef = collection(db, 'todo');
-    const q = query(todoRef, where('Email', '==', `${email?.toLocaleLowerCase()}`));
-    const Snapshot = await getDocs(q);
-    Snapshot.forEach((doc) => {
-      const { Title, Description, Importance, Status } = doc.data();
-      console.log(Title, Description, Importance, Status);
-      const block = document.querySelector(`[data-status="${Status}"]`);
-      console.log(block);
-    });
-    setIsLoaded(false);
   };
 
   useEffect(() => {
@@ -68,6 +83,10 @@ function HomePage(): JSX.Element {
   useEffect(() => {
     getDataHandler();
   }, []);
+
+  useEffect(() => {
+    console.log(todos);
+  }, [todos]);
 
   return (
     <>
@@ -109,10 +128,9 @@ function HomePage(): JSX.Element {
                   className="shadow-lg rounded border-2 mb-4"
                   onChange={selectChangeHandler}
                   value={selectValue}
+                  defaultValue={EnumImportance.LOW}
                 >
-                  <option value={EnumImportance.LOW} selected>
-                    Low
-                  </option>
+                  <option value={EnumImportance.LOW}>Low</option>
                   <option value={EnumImportance.MEDIUM}>Medium</option>
                   <option value={EnumImportance.HIGH}>High</option>
                 </select>

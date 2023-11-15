@@ -34,6 +34,7 @@ function useHomePage(): IHomePageHook {
     setTimeout(() => {
       const target = event.target as HTMLDivElement;
       setIdTarget(target.id);
+      console.log(idTarget, 'idididididid');
       target.classList.add('hidden');
     }, 0);
   };

@@ -25,7 +25,7 @@ const Todo: React.FC<ITodo> = ({
       draggable={true}
       onDragStart={dragStartHandler}
       onDragEnd={dragEndHandler}
-      id={`${index}`}
+      id={index}
       data-status={status}
     >
       <h1>Title: {title}</h1>
