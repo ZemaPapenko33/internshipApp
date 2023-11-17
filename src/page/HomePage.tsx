@@ -117,6 +117,9 @@ function HomePage(): JSX.Element {
           </div>
         )}
       </div>
+
+      {createTodo && <div className="w-screen h-screen bg-black"></div>}
+
     </>
   );
 }
