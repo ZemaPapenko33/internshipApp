@@ -1,19 +1,29 @@
 import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import useHomePage from '../hooks/use-home-page.hook';
-import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import { EnumImportance } from '../shared/consts/enum';
 import TodoSection from '../components/TodoSection';
 import Loader from '../components/Loader';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
-
-// import Todo from '../components/Todo';
+import { RootState } from '../store';
+import { clearSelectedTodo } from '../store/slices/onClickTodoSlice';
+import Popup from '../components/Popup';
 
 function HomePage(): JSX.Element {
-  const blocks = ['Назначено', 'В процессе', 'Закончен'];
+  const selectTodo = useSelector((state: RootState) => state.onClickTodoSlice.selectedTodo);
+  const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
   const email = localStorage.getItem('email');
   const {
     dragStartHandler,
@@ -31,7 +41,10 @@ function HomePage(): JSX.Element {
     textareaChangeHandler,
     selectChangeHandler,
     isLoaded,
-    setIsLoaded
+    setIsLoaded,
+    setTextareaValue,
+    setTitleValue,
+    setSelectValue
   } = useHomePage();
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
@@ -42,14 +55,14 @@ function HomePage(): JSX.Element {
     const todoRef = collection(db, 'todo');
     const q = query(todoRef, where('Email', '==', `${email?.toLocaleLowerCase()}`));
     const Snapshot = await getDocs(q);
-    Snapshot.forEach((doc) => {
-      const { Title, Description, Importance, Status } = doc.data();
+    Snapshot.forEach((docs) => {
+      const { Title, Description, Importance, Status } = docs.data();
       const todo = {
         title: Title,
         description: Description,
         importance: Importance,
         status: Status,
-        id: doc.id
+        id: docs.id
       };
       dispatch(addTodo(todo));
     });
@@ -63,13 +76,35 @@ function HomePage(): JSX.Element {
       Description: `${textareaValue}`,
       Importance: `${selectValue}`,
       Email: `${email?.toLocaleLowerCase()}`,
-      Status: 'Назначено'
+      Status: 'TO DO'
     });
     getDataHandler();
     setIsLoaded(true);
     if (setCreateTodo) {
       setCreateTodo(false);
     }
+  };
+
+  const deleteButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    await deleteDoc(doc(db, 'todo', `${selectTodo?.index}`));
+    getDataHandler();
+    dispatch(clearSelectedTodo());
+    setIsLoaded(true);
+  };
+
+  const updateButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    const updateDocRef = doc(db, 'todo', `${selectTodo?.index}`);
+    await updateDoc(updateDocRef, {
+      Title: titleValue ? titleValue : selectTodo?.title,
+      Description: textareaValue ? textareaValue : selectTodo?.description,
+      Importance: selectValue ? selectValue : selectTodo?.importance
+    });
+
+    getDataHandler();
+    dispatch(clearSelectedTodo());
+    setIsLoaded(true);
   };
 
   useEffect(() => {
@@ -82,10 +117,22 @@ function HomePage(): JSX.Element {
     getDataHandler();
   }, []);
 
+  useEffect(() => {
+    if (setTextareaValue) {
+      setTextareaValue('');
+    }
+    if (setTitleValue) {
+      setTitleValue('');
+    }
+    if (setSelectValue) {
+      setSelectValue('');
+    }
+  }, [createTodo, selectTodo]);
+
   return (
     <>
       <Header />
-      <div className="flex py-2 px-4 items-center justify-center overflow-hidden w-screen h-screen relative ">
+      <div className="flex py-2 px-4 items-center justify-center overflow-hidden w-screen h-screen relative">
         {isLoaded && <Loader />}
         {blocks.map((item, index) => {
           return (
@@ -103,54 +150,26 @@ function HomePage(): JSX.Element {
           );
         })}
         {createTodo && (
-          <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
-            <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
-              <form className="flex flex-col items-start justify-center py-4 px-4 w-[350px] h-[350px]">
-                <input
-                  type="text"
-                  placeholder="Title"
-                  className="mb-2 shadow-lg rounded border-2 h-[30px] px-2 py-2"
-                  onChange={titleInputChangeHandler}
-                />
-                <textarea
-                  className="mb-2 shadow-lg rounded border-2"
-                  style={{ resize: 'none' }}
-                  cols={30}
-                  rows={3}
-                  placeholder="Description"
-                  onChange={textareaChangeHandler}
-                />
-                <select
-                  className="shadow-lg rounded border-2 mb-4"
-                  onChange={selectChangeHandler}
-                  value={selectValue}
-                  defaultValue={EnumImportance.LOW}
-                >
-                  <option value={EnumImportance.LOW}>Low</option>
-                  <option value={EnumImportance.MEDIUM}>Medium</option>
-                  <option value={EnumImportance.HIGH}>High</option>
-                </select>
-                <div>
-                  <button
-                    className=" mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                    onClick={() => {
-                      if (setCreateTodo) {
-                        setCreateTodo(false);
-                      }
-                    }}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className=" shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-                    onClick={submitButtonHandler}
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <Popup
+            titleInputChangeHandler={titleInputChangeHandler}
+            textareaChangeHandler={textareaChangeHandler}
+            selectChangeHandler={selectChangeHandler}
+            setCreateTodo={setCreateTodo}
+            createTodo={createTodo}
+            selectValue={selectValue}
+            submitButtonHandler={submitButtonHandler}
+          />
+        )}
+        {selectTodo && (
+          <Popup
+            titleInputChangeHandler={titleInputChangeHandler}
+            textareaChangeHandler={textareaChangeHandler}
+            selectChangeHandler={selectChangeHandler}
+            selectValue={selectValue}
+            selectTodo={selectTodo}
+            deleteButtonHandler={deleteButtonHandler}
+            updateButtonHandler={updateButtonHandler}
+          />
         )}
       </div>
     </>

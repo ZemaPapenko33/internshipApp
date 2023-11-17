@@ -22,6 +22,9 @@ interface IHomePageHook {
   textareaChangeHandler: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   selectChangeHandler: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   setIsLoaded: React.Dispatch<React.SetStateAction<boolean>>;
+  setTitleValue?: React.Dispatch<React.SetStateAction<string>>;
+  setTextareaValue?: React.Dispatch<React.SetStateAction<string>>;
+  setSelectValue?: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function useHomePage(): IHomePageHook {
@@ -64,10 +67,13 @@ function useHomePage(): IHomePageHook {
     const target = event.target as HTMLDivElement;
     const dataStatus = target.getAttribute('data-status');
     console.log(dataStatus);
-    if (dataStatus == 'Закончен') {
+    if (dataStatus == 'DONE') {
       draggedElement?.classList.remove('bg-white');
       draggedElement?.classList.add('bg-gray-500');
       draggedElement?.classList.add('line-through');
+      if (draggedElement) {
+        draggedElement.style.borderLeft = 'none';
+      }
     } else {
       draggedElement?.classList.remove('line-through');
       draggedElement?.classList.remove('bg-gray-500');
@@ -111,7 +117,10 @@ function useHomePage(): IHomePageHook {
     titleValue,
     selectValue,
     isLoaded,
-    setIsLoaded
+    setIsLoaded,
+    setTextareaValue,
+    setTitleValue,
+    setSelectValue
   };
 }
 

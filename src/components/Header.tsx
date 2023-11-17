@@ -24,23 +24,20 @@ function Header() {
   };
 
   return (
-    <div className=" py-2 px-4 bg-blue-500 shadow-lg h-[50px] w-screen flex justify-around items-center">
+    <div className=" py-2 px-4 bg-white shadow h-[50px] w-screen flex justify-around items-center">
       <input
         type="text"
-        className=" py-2 px-4 h-[30px] w-[270px] rounded"
-        placeholder="search todo"
+        className=" py-2 px-4 h-[30px] w-[270px] rounded border-2"
+        placeholder="Search todo"
       ></input>
       <button
-        className="rounded bg-white h-[30px] w-[270px] hover:bg-black hover:text-white"
+        className="rounded bg-blue-500 h-[30px] w-[270px] text-white"
         onClick={createButtonHandler}
       >
         Create
       </button>
-      <button
-        className="rounded bg-black text-white h-[30px] w-[270px] hover:bg-white hover:text-black"
-        onClick={logOutHandler}
-      >
-        log out
+      <button className="rounded bg-blue-500 h-[30px] w-[270px] text-white" onClick={logOutHandler}>
+        Log out
       </button>
     </div>
   );

@@ -28,10 +28,10 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
   const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
   return (
     <div className="flex flex-col w-full h-full items-center justify-center py-10">
-      <h1 className="bg-white shadow-lg mb-2 px-4 w-[300px]">{item}</h1>
+      <h1 className="bg-blue-200 shadow mb-2 px-4 w-[300px] text-center rounded">{item}</h1>
       <div
         key={index}
-        className="rounded shadow-lg w-[300px] min-h-full bg-yellow-500 py-1 px-4  overflow-y-scroll"
+        className="rounded shadow-lg w-[300px] min-h-full bg-slate-100 py-1 px-4  overflow-y-scroll empty:overflow-y-hidden"
         onDragEnter={dragEnterHandler}
         onDragOver={dragOverHandler}
         onDragLeave={dragLeaveHandler}
