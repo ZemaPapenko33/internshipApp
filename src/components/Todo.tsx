@@ -1,7 +1,6 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
-
-import { clearSelectedTodo, selectTodo } from '../store/slices/onClickTodoSlice';
+import { useForm } from '../context';
+import { EnumImportance } from '../shared/consts/enum';
 
 interface ITodo {
   index: string;
@@ -22,41 +21,35 @@ const Todo: React.FC<ITodo> = ({
   dragStartHandler,
   dragEndHandler
 }) => {
-  const borderLeftStyle = {
-    borderLeft:
-      status === 'Назначено'
-        ? '10px solid red'
-        : status === 'В процессе'
-        ? '10px solid yellow'
-        : 'none'
+  const { setIsVisible, setIdTodo } = useForm();
+  const background = {
+    background:
+      importance === EnumImportance.LOW
+        ? 'green'
+        : importance === EnumImportance.MEDIUM
+        ? 'yellow'
+        : 'red'
   };
-  const dispatch = useDispatch();
 
-  const onClickHandler = () => {
-    dispatch(clearSelectedTodo());
-    const todoPayload = {
-      index,
-      status,
-      title,
-      description,
-      importance
-    };
-    dispatch(selectTodo(todoPayload));
+  const onClickHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setIsVisible(true);
+    setIdTodo(index);
   };
   return (
     <div
-      className="flex flex-col shadow-lg py-2 px-4 w-full h-[100px] bg-white mb-2 rounded "
+      className="flex flex-col shadow-lg py-2 px-4 w-full h-[80px] bg-white mb-2 rounded "
       draggable={true}
       onDragStart={dragStartHandler}
       onDragEnd={dragEndHandler}
       id={index}
       data-status={status}
-      style={borderLeftStyle}
       onClick={onClickHandler}
     >
-      <h1>Title: {title}</h1>
-      <p>Description: {description}</p>
-      <p>Importance: {importance}</p>
+      <p className="mb-2 font-medium">{description}</p>
+      <h1 style={background} className="px-1 w-full">
+        {title}
+      </h1>
     </div>
   );
 };

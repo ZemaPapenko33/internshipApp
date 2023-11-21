@@ -1,7 +1,9 @@
 import { doc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
+import { updateStatusById } from '../store/slices/todoSlice';
 
 interface IHomePageHook {
   idTarget: string;
@@ -34,12 +36,12 @@ function useHomePage(): IHomePageHook {
   const [textareaValue, setTextareaValue] = useState<string>('');
   const [selectValue, setSelectValue] = useState<string>('Low');
   const [titleValue, setTitleValue] = useState<string>('');
+  const dispatch = useDispatch();
 
   const dragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
     setTimeout(() => {
       const target = event.target as HTMLDivElement;
       setIdTarget(target.id);
-      console.log(idTarget, 'idididididid');
       target.classList.add('hidden');
     }, 0);
   };
@@ -63,15 +65,18 @@ function useHomePage(): IHomePageHook {
 
   const dragDropHandler = async (event: React.DragEvent<HTMLDivElement>) => {
     const data = idTarget;
+
     const draggedElement = document.getElementById(data);
+
     const target = event.target as HTMLDivElement;
+
     const dataStatus = target.getAttribute('data-status');
-    console.log(dataStatus);
-    if (dataStatus == 'DONE') {
-      draggedElement?.classList.remove('bg-white');
-      draggedElement?.classList.add('bg-gray-500');
-      draggedElement?.classList.add('line-through');
+
+    if (dataStatus === 'DONE') {
       if (draggedElement) {
+        draggedElement.classList.remove('bg-white');
+        draggedElement.classList.add('bg-gray-500');
+        draggedElement.classList.add('line-through');
         draggedElement.style.borderLeft = 'none';
       }
     } else {
@@ -79,10 +84,9 @@ function useHomePage(): IHomePageHook {
       draggedElement?.classList.remove('bg-gray-500');
       draggedElement?.classList.add('bg-white');
     }
-    if (draggedElement) {
-      target.append(draggedElement);
-    }
+
     const id = draggedElement?.id as string;
+    dispatch(updateStatusById({ id, dataStatus: `${dataStatus}` }));
     const updateDocRef = doc(db, 'todo', id);
     await updateDoc(updateDocRef, {
       Status: `${dataStatus}`

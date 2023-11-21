@@ -10,3 +10,6 @@ export const selectFilteredTodos = createSelector(
     return statusFilter ? todos.filter((todo) => todo.status === statusFilter) : todos;
   }
 );
+
+export const selectTodoById = (id: string) =>
+  createSelector([selectTodoState], ({ todos }) => todos.find((todo) => todo.id === id) || null);

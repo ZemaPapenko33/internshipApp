@@ -1,14 +1,13 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useForm } from '../context';
 import { EnumImportance } from '../shared/consts/enum';
-import { clearSelectedTodo } from '../store/slices/onClickTodoSlice';
 
-interface ISelectTodo {
-  index: string;
+interface ITodoPayload {
   status: string;
   title: string;
   description: string;
   importance: string;
+  id: string;
 }
 
 interface IPopup {
@@ -17,16 +16,15 @@ interface IPopup {
   selectChangeHandler?: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   setCreateTodo?: React.Dispatch<React.SetStateAction<boolean>>;
   createTodo?: boolean;
-  selectTodo?: ISelectTodo;
   updateButtonHandler?: (event: React.MouseEvent) => void;
-  deleteButtonHandler?: (event: React.MouseEvent) => void;
+  deleteButtonHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   submitButtonHandler?: (event: React.MouseEvent) => void;
   selectValue?: string;
+  selectedTodo?: ITodoPayload | null;
 }
 
 const Popup: React.FC<IPopup> = ({
   titleInputChangeHandler,
-  selectTodo,
   textareaChangeHandler,
   selectChangeHandler,
   deleteButtonHandler,
@@ -34,10 +32,10 @@ const Popup: React.FC<IPopup> = ({
   createTodo,
   setCreateTodo,
   submitButtonHandler,
-  selectValue
+  selectValue,
+  selectedTodo
 }) => {
-  const dispatch = useDispatch();
-
+  const { setIsVisible, isVisible, setIdTodo } = useForm();
   return (
     <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
       <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
@@ -47,7 +45,7 @@ const Popup: React.FC<IPopup> = ({
             placeholder="Title"
             className="mb-2 shadow-lg rounded border-2 h-[30px] px-2 py-2"
             onChange={titleInputChangeHandler}
-            defaultValue={selectTodo?.title || ''}
+            defaultValue={selectedTodo?.title || ''}
           />
           <textarea
             className="mb-2 shadow-lg rounded border-2"
@@ -56,13 +54,13 @@ const Popup: React.FC<IPopup> = ({
             rows={3}
             placeholder="Description"
             onChange={textareaChangeHandler}
-            defaultValue={selectTodo?.description || ''}
+            defaultValue={selectedTodo?.description || ''}
           />
           <select
             className="shadow-lg rounded border-2 mb-4"
             onChange={selectChangeHandler}
-            value={selectValue || selectTodo?.importance}
-            defaultValue={selectTodo?.importance || EnumImportance.LOW}
+            value={selectValue}
+            defaultValue={EnumImportance.LOW}
           >
             <option value={EnumImportance.LOW}>Low</option>
             <option value={EnumImportance.MEDIUM}>Medium</option>
@@ -89,12 +87,13 @@ const Popup: React.FC<IPopup> = ({
                 </button>
               </>
             )}
-            {selectTodo && (
+            {isVisible && (
               <>
                 <button
                   className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
                   onClick={() => {
-                    dispatch(clearSelectedTodo());
+                    setIsVisible(false);
+                    setIdTodo('');
                   }}
                 >
                   Close
