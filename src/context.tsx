@@ -9,7 +9,7 @@ interface IFormContext {
   isUseEmail: boolean;
   searchTodo: string;
   isVisible: boolean;
-  idTodo: string;
+  todoId: string;
   setCreateTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
@@ -20,7 +20,7 @@ interface IFormContext {
   passwordInputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setSearchTodo: React.Dispatch<React.SetStateAction<string>>;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setIdTodo: React.Dispatch<React.SetStateAction<string>>;
+  setTodoId: React.Dispatch<React.SetStateAction<string>>;
 }
 
 interface FormProviderProps {
@@ -38,7 +38,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [isUseEmail, setIsUseEmail] = useState<boolean>(false);
   const [searchTodo, setSearchTodo] = useState<string>('');
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [idTodo, setIdTodo] = useState<string>('');
+  const [todoId, setTodoId] = useState<string>('');
 
   const emailInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsInvalidEmail(false);
@@ -72,8 +72,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
         searchTodo,
         isVisible,
         setIsVisible,
-        idTodo,
-        setIdTodo
+        todoId,
+        setTodoId
       }}
     >
       {children}

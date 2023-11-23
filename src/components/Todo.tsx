@@ -21,7 +21,7 @@ const Todo: React.FC<ITodo> = ({
   dragStartHandler,
   dragEndHandler
 }) => {
-  const { setIsVisible, setIdTodo } = useForm();
+  const { setIsVisible, setTodoId } = useForm();
   const background = {
     background:
       importance === EnumImportance.LOW
@@ -34,7 +34,7 @@ const Todo: React.FC<ITodo> = ({
   const onClickHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     setIsVisible(true);
-    setIdTodo(index);
+    setTodoId(index);
   };
   return (
     <div

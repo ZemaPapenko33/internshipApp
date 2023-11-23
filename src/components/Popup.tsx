@@ -35,7 +35,7 @@ const Popup: React.FC<IPopup> = ({
   selectValue,
   selectedTodo
 }) => {
-  const { setIsVisible, isVisible, setIdTodo } = useForm();
+  const { setIsVisible, isVisible, setTodoId } = useForm();
   return (
     <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
       <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
@@ -93,7 +93,7 @@ const Popup: React.FC<IPopup> = ({
                   className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
                   onClick={() => {
                     setIsVisible(false);
-                    setIdTodo('');
+                    setTodoId('');
                   }}
                 >
                   Close

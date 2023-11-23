@@ -49,9 +49,9 @@ function HomePage(): JSX.Element {
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
   const dispatch = useDispatch();
-  const { isVisible, idTodo, setIsVisible } = useForm();
+  const { isVisible, todoId, setIsVisible } = useForm();
   const selectedTodo = useSelector((state: RootState) =>
-    idTodo ? selectTodoById(idTodo)(state) : null
+    todoId ? selectTodoById(todoId)(state) : null
   );
 
   const getDataHandler = async () => {
@@ -92,14 +92,14 @@ function HomePage(): JSX.Element {
 
   const deleteButtonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await deleteDoc(doc(db, 'todo', idTodo));
+    await deleteDoc(doc(db, 'todo', todoId));
     setIsLoaded(true);
     getDataHandler();
   };
 
   const updateButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
-    const updateDocRef = doc(db, 'todo', `${idTodo}`);
+    const updateDocRef = doc(db, 'todo', `${todoId}`);
     await updateDoc(updateDocRef, {
       Title: titleValue ? titleValue : selectedTodo?.title,
       Description: textareaValue ? textareaValue : selectedTodo?.description,
