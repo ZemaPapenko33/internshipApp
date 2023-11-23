@@ -9,7 +9,7 @@ interface IFormContext {
   isUseEmail: boolean;
   searchTodo: string;
   isVisible: boolean;
-  idTodo: string;
+  todoId: string;
   isCreateProject: boolean;
   nameProject: string;
   idActiveProject: string;
@@ -24,7 +24,7 @@ interface IFormContext {
   passwordInputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setSearchTodo: React.Dispatch<React.SetStateAction<string>>;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
-  setIdTodo: React.Dispatch<React.SetStateAction<string>>;
+  setTodoId: React.Dispatch<React.SetStateAction<string>>;
   setIsCreateProject: React.Dispatch<React.SetStateAction<boolean>>;
   nameProjectInputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
   setIdActiveProject: React.Dispatch<React.SetStateAction<string>>;
@@ -46,7 +46,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [isUseEmail, setIsUseEmail] = useState<boolean>(false);
   const [searchTodo, setSearchTodo] = useState<string>('');
   const [isVisible, setIsVisible] = useState<boolean>(false);
-  const [idTodo, setIdTodo] = useState<string>('');
+  const [todoId, setTodoId] = useState<string>('');
   const [isCreateProject, setIsCreateProject] = useState<boolean>(false);
   const [nameProject, setNameProject] = useState<string>('');
   const [idActiveProject, setIdActiveProject] = useState<string>('');
@@ -88,8 +88,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
         searchTodo,
         isVisible,
         setIsVisible,
-        idTodo,
-        setIdTodo,
+        todoId,
+        setTodoId,
         isCreateProject,
         setIsCreateProject,
         nameProject,

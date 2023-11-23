@@ -52,10 +52,10 @@ function HomePage(): JSX.Element {
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
   const dispatch = useDispatch();
-  const { isVisible, idTodo, setIsVisible, isCreateProject, idActiveProject, isSetting } =
+  const { isVisible, todoId, setIsVisible, isCreateProject, idActiveProject, isSetting } =
     useForm();
   const selectedTodo = useSelector((state: RootState) =>
-    idTodo ? selectTodoById(idTodo)(state) : null
+    todoId ? selectTodoById(todoId)(state) : null
   );
 
   const getProjectData = async () => {
@@ -117,14 +117,14 @@ function HomePage(): JSX.Element {
 
   const deleteButtonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await deleteDoc(doc(db, 'todo', idTodo));
+    await deleteDoc(doc(db, 'todo', todoId));
     setIsLoading(true);
     getDataHandler();
   };
 
   const updateButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
-    const updateDocRef = doc(db, 'todo', `${idTodo}`);
+    const updateDocRef = doc(db, 'todo', `${todoId}`);
     await updateDoc(updateDocRef, {
       Title: titleValue ? titleValue : selectedTodo?.title,
       Description: textareaValue ? textareaValue : selectedTodo?.description,

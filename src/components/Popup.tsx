@@ -35,11 +35,11 @@ const Popup: React.FC<IPopup> = ({
   selectValue,
   selectedTodo
 }) => {
-  const { setIsVisible, isVisible, setIdTodo } = useForm();
+  const { setIsVisible, isVisible, setTodoId } = useForm();
 
   const closeButtonHandlerByIsVisible = () => {
     setIsVisible(false);
-    setIdTodo('');
+    setTodoId('');
   };
 
   const closeButtonHandlerByCreateTodo = () => {
