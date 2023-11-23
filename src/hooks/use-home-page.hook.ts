@@ -2,6 +2,7 @@ import { doc, updateDoc } from 'firebase/firestore';
 import React, { useState } from 'react';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
+import { EnumImportance } from '../shared/consts/enum';
 
 interface IHomePageHook {
   idTarget: string;
@@ -29,7 +30,7 @@ function useHomePage(): IHomePageHook {
   const { createTodo, setCreateTodo } = useForm();
   const [idTarget, setIdTarget] = useState<string>('');
   const [textareaValue, setTextareaValue] = useState<string>('');
-  const [selectValue, setSelectValue] = useState<string>('Low');
+  const [selectValue, setSelectValue] = useState<string>(EnumImportance.LOW);
   const [titleValue, setTitleValue] = useState<string>('');
 
   const dragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
