@@ -10,8 +10,6 @@ import Loader from '../components/Loader';
 import { useDispatch } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
 
-// import Todo from '../components/Todo';
-
 function HomePage(): JSX.Element {
   const blocks = ['Назначено', 'В процессе', 'Закончен'];
   const email = localStorage.getItem('email');

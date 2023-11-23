@@ -37,7 +37,6 @@ function useHomePage(): IHomePageHook {
     setTimeout(() => {
       const target = event.target as HTMLDivElement;
       setIdTarget(target.id);
-      console.log(idTarget, 'idididididid');
       target.classList.add('hidden');
     }, 0);
   };
@@ -64,7 +63,6 @@ function useHomePage(): IHomePageHook {
     const draggedElement = document.getElementById(data);
     const target = event.target as HTMLDivElement;
     const dataStatus = target.getAttribute('data-status');
-    console.log(dataStatus);
     if (dataStatus == 'Закончен') {
       draggedElement?.classList.remove('bg-white');
       draggedElement?.classList.add('bg-gray-500');
