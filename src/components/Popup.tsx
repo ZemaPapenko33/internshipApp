@@ -38,6 +38,16 @@ const Popup: React.FC<IPopup> = ({
 }) => {
   const dispatch = useDispatch();
 
+  const closeButtonHandlerBySelected = () => {
+    dispatch(clearSelectedTodo());
+  };
+
+  const closeButtonHandlerByCreateTodo = () => {
+    if (setCreateTodo) {
+      setCreateTodo(false);
+    }
+  };
+
   return (
     <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
       <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
@@ -73,11 +83,7 @@ const Popup: React.FC<IPopup> = ({
               <>
                 <button
                   className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                  onClick={() => {
-                    if (setCreateTodo) {
-                      setCreateTodo(false);
-                    }
-                  }}
+                  onClick={closeButtonHandlerByCreateTodo}
                 >
                   Close
                 </button>
@@ -93,9 +99,7 @@ const Popup: React.FC<IPopup> = ({
               <>
                 <button
                   className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
-                  onClick={() => {
-                    dispatch(clearSelectedTodo());
-                  }}
+                  onClick={closeButtonHandlerBySelected}
                 >
                   Close
                 </button>
