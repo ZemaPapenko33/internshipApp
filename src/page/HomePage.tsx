@@ -13,7 +13,6 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import TodoSection from '../components/TodoSection';
 import Loader from '../components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
@@ -24,6 +23,7 @@ import { RootState } from '../store';
 import Sidebar from '../components/Sidebar';
 import PopupCreateProject from '../components/PopupCreateProject';
 import { addProject, setProject } from '../store/slices/projectSlice';
+import Content from '../components/Content';
 
 function HomePage(): JSX.Element {
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
@@ -43,8 +43,8 @@ function HomePage(): JSX.Element {
     titleInputChangeHandler,
     textareaChangeHandler,
     selectChangeHandler,
-    isLoaded,
-    setIsLoaded,
+    isLoading,
+    setIsLoading,
     setTextareaValue,
     setTitleValue,
     setSelectValue
@@ -71,6 +71,7 @@ function HomePage(): JSX.Element {
       };
       dispatch(addProject(project));
     });
+    setIsLoading(false);
   };
 
   const getDataHandler = async () => {
@@ -93,7 +94,7 @@ function HomePage(): JSX.Element {
       };
       dispatch(addTodo(todo));
     });
-    setIsLoaded(false);
+    setIsLoading(false);
     setIsVisible(false);
   };
 
@@ -108,7 +109,7 @@ function HomePage(): JSX.Element {
       ProjectId: idActiveProject
     });
     getDataHandler();
-    setIsLoaded(true);
+    setIsLoading(true);
     if (setCreateTodo) {
       setCreateTodo(false);
     }
@@ -117,7 +118,7 @@ function HomePage(): JSX.Element {
   const deleteButtonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await deleteDoc(doc(db, 'todo', idTodo));
-    setIsLoaded(true);
+    setIsLoading(true);
     getDataHandler();
   };
 
@@ -131,7 +132,7 @@ function HomePage(): JSX.Element {
     });
 
     getDataHandler();
-    setIsLoaded(true);
+    setIsLoading(true);
   };
 
   useEffect(() => {
@@ -141,7 +142,6 @@ function HomePage(): JSX.Element {
   }, [user]);
 
   useEffect(() => {
-    getDataHandler();
     getProjectData();
   }, []);
 
@@ -168,22 +168,20 @@ function HomePage(): JSX.Element {
       <Header />
       <div className="flex py-2  items-center  overflow-hidden w-screen h-screen relative ">
         <Sidebar />
-        {isLoaded && <Loader />}
-        {!isLoaded &&
-          blocks.map((item, index) => {
-            return (
-              <TodoSection
-                key={index}
-                item={item}
-                dragEnterHandler={dragEnterHandler}
-                dragOverHandler={dragOverHandler}
-                dragLeaveHandler={dragLeaveHandler}
-                dragDropHandler={dragDropHandler}
-                dragStartHandler={dragStartHandler}
-                dragEndHandler={dragEndHandler}
-              />
-            );
-          })}
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Content
+            blocks={blocks}
+            dragDropHandler={dragDropHandler}
+            dragEndHandler={dragEndHandler}
+            dragStartHandler={dragStartHandler}
+            dragOverHandler={dragOverHandler}
+            dragEnterHandler={dragEnterHandler}
+            dragLeaveHandler={dragLeaveHandler}
+          />
+        )}
+
         {createTodo && (
           <Popup
             titleInputChangeHandler={titleInputChangeHandler}
