@@ -38,7 +38,7 @@ const Todo: React.FC<ITodo> = ({
   };
   return (
     <div
-      className="flex flex-col shadow-lg py-2 px-4 w-full h-[80px] bg-white mb-2 rounded "
+      className="flex flex-col shadow-lg py-2 px-4 w-full min-h-[80px] bg-white mb-2 rounded "
       draggable={true}
       onDragStart={dragStartHandler}
       onDragEnd={dragEndHandler}

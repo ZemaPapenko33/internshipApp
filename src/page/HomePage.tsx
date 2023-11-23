@@ -21,6 +21,9 @@ import Popup from '../components/Popup';
 import { useForm } from '../context';
 import { selectTodoById } from '../store/selectors/selectors';
 import { RootState } from '../store';
+import Sidebar from '../components/Sidebar';
+import PopupCreateProject from '../components/PopupCreateProject';
+import { addProject, setProject } from '../store/slices/projectSlice';
 
 function HomePage(): JSX.Element {
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
@@ -49,15 +52,35 @@ function HomePage(): JSX.Element {
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
   const dispatch = useDispatch();
-  const { isVisible, idTodo, setIsVisible } = useForm();
+  const { isVisible, idTodo, setIsVisible, isCreateProject, idActiveProject, isSetting } =
+    useForm();
   const selectedTodo = useSelector((state: RootState) =>
     idTodo ? selectTodoById(idTodo)(state) : null
   );
 
+  const getProjectData = async () => {
+    dispatch(setProject([]));
+    const projectRef = collection(db, 'projects');
+    const q = query(projectRef, where('email', '==', `${email?.toLocaleLowerCase()}`));
+    const Snapshot = await getDocs(q);
+    Snapshot.forEach((docs) => {
+      const { name } = docs.data();
+      const project = {
+        name: name,
+        id: docs.id
+      };
+      dispatch(addProject(project));
+    });
+  };
+
   const getDataHandler = async () => {
     dispatch(setTodo([]));
     const todoRef = collection(db, 'todo');
-    const q = query(todoRef, where('Email', '==', `${email?.toLocaleLowerCase()}`));
+    const q = query(
+      todoRef,
+      where('Email', '==', `${email?.toLocaleLowerCase()}`),
+      where('ProjectId', '==', `${idActiveProject}`)
+    );
     const Snapshot = await getDocs(q);
     Snapshot.forEach((docs) => {
       const { Title, Description, Importance, Status } = docs.data();
@@ -81,7 +104,8 @@ function HomePage(): JSX.Element {
       Description: `${textareaValue}`,
       Importance: `${selectValue}`,
       Email: `${email?.toLocaleLowerCase()}`,
-      Status: 'TO DO'
+      Status: 'TO DO',
+      ProjectId: idActiveProject
     });
     getDataHandler();
     setIsLoaded(true);
@@ -118,7 +142,12 @@ function HomePage(): JSX.Element {
 
   useEffect(() => {
     getDataHandler();
+    getProjectData();
   }, []);
+
+  useEffect(() => {
+    getDataHandler();
+  }, [idActiveProject]);
 
   useEffect(() => {
     if (setTextareaValue) {
@@ -135,9 +164,10 @@ function HomePage(): JSX.Element {
   }, [createTodo, isVisible]);
 
   return (
-    <>
+    <div className="overscroll-x-none overflow-x-hidden">
       <Header />
-      <div className="flex py-2 px-4 items-center justify-center overflow-hidden w-screen h-screen relative">
+      <div className="flex py-2  items-center  overflow-hidden w-screen h-screen relative ">
+        <Sidebar />
         {isLoaded && <Loader />}
         {!isLoaded &&
           blocks.map((item, index) => {
@@ -176,8 +206,10 @@ function HomePage(): JSX.Element {
             selectedTodo={selectedTodo}
           />
         )}
+        {isCreateProject && <PopupCreateProject getProjectData={getProjectData} />}
+        {isSetting && <PopupCreateProject getProjectData={getProjectData} />}
       </div>
-    </>
+    </div>
   );
 }
 

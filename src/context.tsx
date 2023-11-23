@@ -10,6 +10,10 @@ interface IFormContext {
   searchTodo: string;
   isVisible: boolean;
   idTodo: string;
+  isCreateProject: boolean;
+  nameProject: string;
+  idActiveProject: string;
+  isSetting: boolean;
   setCreateTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
@@ -21,6 +25,10 @@ interface IFormContext {
   setSearchTodo: React.Dispatch<React.SetStateAction<string>>;
   setIsVisible: React.Dispatch<React.SetStateAction<boolean>>;
   setIdTodo: React.Dispatch<React.SetStateAction<string>>;
+  setIsCreateProject: React.Dispatch<React.SetStateAction<boolean>>;
+  nameProjectInputHandler: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  setIdActiveProject: React.Dispatch<React.SetStateAction<string>>;
+  setIsSetting: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface FormProviderProps {
@@ -39,6 +47,14 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [searchTodo, setSearchTodo] = useState<string>('');
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [idTodo, setIdTodo] = useState<string>('');
+  const [isCreateProject, setIsCreateProject] = useState<boolean>(false);
+  const [nameProject, setNameProject] = useState<string>('');
+  const [idActiveProject, setIdActiveProject] = useState<string>('');
+  const [isSetting, setIsSetting] = useState<boolean>(false);
+
+  const nameProjectInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameProject(event.target.value);
+  };
 
   const emailInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setIsInvalidEmail(false);
@@ -73,7 +89,15 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
         isVisible,
         setIsVisible,
         idTodo,
-        setIdTodo
+        setIdTodo,
+        isCreateProject,
+        setIsCreateProject,
+        nameProject,
+        nameProjectInputHandler,
+        idActiveProject,
+        setIdActiveProject,
+        isSetting,
+        setIsSetting
       }}
     >
       {children}
