@@ -26,6 +26,7 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
   dragEndHandler
 }) => {
   const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
+
   return (
     <div className="flex flex-col w-full h-full items-center justify-center py-10">
       <h1 className="bg-blue-200 shadow mb-2 px-4 w-[300px] text-center rounded">{item}</h1>
