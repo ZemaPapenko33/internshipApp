@@ -22,13 +22,21 @@ const Todo: React.FC<ITodo> = ({
   dragEndHandler
 }) => {
   const { setIsVisible, setTodoId } = useForm();
+  const getColor = (importances: string): string => {
+    switch (importances) {
+      case `${EnumImportance.LOW}`:
+        return 'green';
+      case `${EnumImportance.MEDIUM}`:
+        return 'yellow';
+      case `${EnumImportance.HIGH}`:
+        return 'red';
+      default:
+        return 'green';
+    }
+  };
+
   const background = {
-    background:
-      importance === EnumImportance.LOW
-        ? 'green'
-        : importance === EnumImportance.MEDIUM
-        ? 'yellow'
-        : 'red'
+    background: getColor(importance)
   };
 
   const onClickHandler = (event: React.MouseEvent) => {

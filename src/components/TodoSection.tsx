@@ -27,10 +27,9 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
 }) => {
   const { searchTodo } = useForm();
   const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
-  const filteredTodos =
-    searchTodo.length > 0
-      ? filterTodo.filter((todo) => todo.title.toLowerCase().includes(searchTodo.toLowerCase()))
-      : filterTodo;
+  const filteredTodos = searchTodo.length
+    ? filterTodo.filter((todo) => todo.title.toLowerCase().includes(searchTodo.toLowerCase()))
+    : filterTodo;
 
   return (
     <div className="flex flex-col h-screen w-[250px] items-center justify-center mr-5  py-5">
