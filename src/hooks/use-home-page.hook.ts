@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
+import { EnumImportance } from '../shared/consts/enum';
 import { updateStatusById } from '../store/slices/todoSlice';
 
 interface IHomePageHook {
@@ -34,7 +35,7 @@ function useHomePage(): IHomePageHook {
   const { createTodo, setCreateTodo } = useForm();
   const [idTarget, setIdTarget] = useState<string>('');
   const [textareaValue, setTextareaValue] = useState<string>('');
-  const [selectValue, setSelectValue] = useState<string>('Low');
+  const [selectValue, setSelectValue] = useState<string>(EnumImportance.LOW);
   const [titleValue, setTitleValue] = useState<string>('');
   const dispatch = useDispatch();
 

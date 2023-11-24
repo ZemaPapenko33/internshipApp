@@ -4,7 +4,7 @@ import { useForm } from '../context';
 import { RootState } from '../store';
 import { selectFilteredTodos } from '../store/selectors/selectors';
 
-import Todo from './Todo';
+import Todo from './TodoBlock/Todo';
 
 interface ITodoSectionProps {
   item: string;
