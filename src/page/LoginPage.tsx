@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import useLoginPage from '../hooks/use-login-page.hook';
 import { useForm } from '../context';
 
@@ -12,6 +12,14 @@ function LoginPage(): JSX.Element {
     googleButtonHandler,
     githubButtonHandler
   } = useLoginPage(email, password);
+  const user = localStorage.getItem('user');
+  const navigateToHomePage = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      navigateToHomePage('/');
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">

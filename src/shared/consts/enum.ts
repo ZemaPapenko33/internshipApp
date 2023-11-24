@@ -4,3 +4,9 @@ export enum EnumErrors {
   MISSING_PASSWORD = 'auth/missing-password',
   INVALID_LOGIN_CREDENTIAL = 'auth/invalid-login-credentials'
 }
+
+export enum EnumImportance {
+  LOW = 'Low',
+  MEDIUM = 'Medium',
+  HIGH = 'High'
+}
