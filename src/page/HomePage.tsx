@@ -1,8 +1,18 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from '../components/Header';
 import useHomePage from '../hooks/use-home-page.hook';
+import { addDoc, collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase/firebaseConfig';
+import { useNavigate } from 'react-router-dom';
+import { EnumImportance } from '../shared/consts/enum';
+import TodoSection from '../components/TodoSection';
+import Loader from '../components/Loader';
+import { useDispatch } from 'react-redux';
+import { addTodo, setTodo } from '../store/slices/todoSlice';
 
 function HomePage(): JSX.Element {
+  const blocks = ['Назначено', 'В процессе', 'Закончен'];
+  const email = localStorage.getItem('email');
   const {
     dragStartHandler,
     dragEndHandler,
@@ -11,72 +21,85 @@ function HomePage(): JSX.Element {
     dragLeaveHandler,
     dragDropHandler,
     createTodo,
-    setCreateTodo
+    setCreateTodo,
+    selectValue,
+    titleValue,
+    textareaValue,
+    titleInputChangeHandler,
+    textareaChangeHandler,
+    selectChangeHandler,
+    isLoaded,
+    setIsLoaded
   } = useHomePage();
+  const navigateToLoginPage = useNavigate();
+  const user = localStorage.getItem('user');
+  const dispatch = useDispatch();
+
+  const getDataHandler = async () => {
+    dispatch(setTodo([]));
+    const todoRef = collection(db, 'todo');
+    const q = query(todoRef, where('Email', '==', `${email?.toLocaleLowerCase()}`));
+    const Snapshot = await getDocs(q);
+    Snapshot.forEach((doc) => {
+      const { Title, Description, Importance, Status } = doc.data();
+      const todo = {
+        title: Title,
+        description: Description,
+        importance: Importance,
+        status: Status,
+        id: doc.id
+      };
+      dispatch(addTodo(todo));
+    });
+    setIsLoaded(false);
+  };
+
+  const submitButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    await addDoc(collection(db, 'todo'), {
+      Title: `${titleValue}`,
+      Description: `${textareaValue}`,
+      Importance: `${selectValue}`,
+      Email: `${email?.toLocaleLowerCase()}`,
+      Status: 'Назначено'
+    });
+    getDataHandler();
+    setIsLoaded(true);
+    if (setCreateTodo) {
+      setCreateTodo(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!user) {
+      navigateToLoginPage('/login');
+    }
+  }, [user]);
+
+  useEffect(() => {
+    getDataHandler();
+  }, []);
 
   return (
     <>
       <Header />
-      <div className="flex py-2 px-4 items-center justify-around overflow-hidden w-screen h-screen relative ">
-        <div
-          className="rounded shadow-lg w-[300px] min-h-full bg-yellow-500  py-1 px-4"
-          onDragEnter={dragEnterHandler}
-          onDragOver={dragOverHandler}
-          onDragLeave={dragLeaveHandler}
-          onDrop={dragDropHandler}
-        >
-          <div
-            className="flex flex-col py-2 px-4 w-full h-[150px] bg-white mb-2 "
-            draggable={true}
-            onDragStart={dragStartHandler}
-            onDragEnd={dragEndHandler}
-            id="3"
-          >
-            <h1>Title:1</h1>
-            <p>description:</p>
-            <p>importance:</p>
-          </div>
-          <div
-            className="flex flex-col py-2 px-4 w-full h-[150px] bg-white mb-2 "
-            draggable={true}
-            onDragStart={dragStartHandler}
-            onDragEnd={dragEndHandler}
-            id="1"
-          >
-            <h1>Title:3</h1>
-            <p>description:</p>
-            <p>importance:</p>
-          </div>
-          <div
-            className="flex flex-col py-2 px-4 w-full h-[150px] bg-white mb-2 "
-            draggable={true}
-            onDragStart={dragStartHandler}
-            onDragEnd={dragEndHandler}
-            id="2"
-          >
-            <h1>Title:2</h1>
-            <p>description:</p>
-            <p>importance:</p>
-          </div>
-        </div>
-        <div
-          className="rounded shadow-lg w-[300px] min-h-full bg-yellow-500  py-1 px-4"
-          onDragEnter={dragEnterHandler}
-          onDragOver={dragOverHandler}
-          onDragLeave={dragLeaveHandler}
-          onDrop={dragDropHandler}
-        >
-          2
-        </div>
-        <div
-          className="rounded shadow-lg w-[300px] min-h-full bg-yellow-500  py-1 px-4"
-          onDragEnter={dragEnterHandler}
-          onDragOver={dragOverHandler}
-          onDragLeave={dragLeaveHandler}
-          onDrop={dragDropHandler}
-        >
-          3
-        </div>
+      <div className="flex py-2 px-4 items-center justify-center overflow-hidden w-screen h-screen relative ">
+        {isLoaded && <Loader />}
+        {blocks.map((item, index) => {
+          return (
+            <TodoSection
+              key={index}
+              item={item}
+              index={index}
+              dragEnterHandler={dragEnterHandler}
+              dragOverHandler={dragOverHandler}
+              dragLeaveHandler={dragLeaveHandler}
+              dragDropHandler={dragDropHandler}
+              dragStartHandler={dragStartHandler}
+              dragEndHandler={dragEndHandler}
+            />
+          );
+        })}
         {createTodo && (
           <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
             <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
@@ -85,17 +108,25 @@ function HomePage(): JSX.Element {
                   type="text"
                   placeholder="Title"
                   className="mb-2 shadow-lg rounded border-2 h-[30px] px-2 py-2"
+                  onChange={titleInputChangeHandler}
                 />
                 <textarea
                   className="mb-2 shadow-lg rounded border-2"
                   style={{ resize: 'none' }}
                   cols={30}
                   rows={3}
+                  placeholder="Description"
+                  onChange={textareaChangeHandler}
                 />
-                <select className="shadow-lg rounded border-2 mb-4">
-                  <option className="shadow-lg rounded border-2">Low</option>
-                  <option className="shadow-lg rounded border-2">Medium</option>
-                  <option className="shadow-lg rounded border-2">High</option>
+                <select
+                  className="shadow-lg rounded border-2 mb-4"
+                  onChange={selectChangeHandler}
+                  value={selectValue}
+                  defaultValue={EnumImportance.LOW}
+                >
+                  <option value={EnumImportance.LOW}>Low</option>
+                  <option value={EnumImportance.MEDIUM}>Medium</option>
+                  <option value={EnumImportance.HIGH}>High</option>
                 </select>
                 <div>
                   <button
@@ -108,7 +139,10 @@ function HomePage(): JSX.Element {
                   >
                     Close
                   </button>
-                  <button className=" shadow-lg rounded border-2 w-[100px] bg-green-500 text-white">
+                  <button
+                    className=" shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
+                    onClick={submitButtonHandler}
+                  >
                     Submit
                   </button>
                 </div>

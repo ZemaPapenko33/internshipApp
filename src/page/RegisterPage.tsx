@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import useRegisterPage from '../hooks/use-register-page.hook';
 
 function RegisterPage(): JSX.Element {
@@ -11,6 +11,14 @@ function RegisterPage(): JSX.Element {
     emailInputHandler,
     passwordInputHandler
   } = useRegisterPage();
+  const navigateToHomePage = useNavigate();
+  const user = localStorage.getItem('user');
+
+  useEffect(() => {
+    if (user) {
+      navigateToHomePage('/');
+    }
+  }, [user]);
 
   return (
     <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">
