@@ -17,12 +17,12 @@ import TodoSection from '../components/TodoSection';
 import Loader from '../components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
-import { RootState } from '../store';
-import { clearSelectedTodo } from '../store/slices/onClickTodoSlice';
 import Popup from '../components/Popup';
+import { useForm } from '../context';
+import { selectTodoById } from '../store/selectors/selectors';
+import { RootState } from '../store';
 
 function HomePage(): JSX.Element {
-  const selectTodo = useSelector((state: RootState) => state.onClickTodoSlice.selectedTodo);
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
   const email = localStorage.getItem('email');
   const {
@@ -49,6 +49,10 @@ function HomePage(): JSX.Element {
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
   const dispatch = useDispatch();
+  const { isVisible, todoId, setIsVisible } = useForm();
+  const selectedTodo = useSelector((state: RootState) =>
+    todoId ? selectTodoById(todoId)(state) : null
+  );
 
   const getDataHandler = async () => {
     dispatch(setTodo([]));
@@ -67,6 +71,7 @@ function HomePage(): JSX.Element {
       dispatch(addTodo(todo));
     });
     setIsLoaded(false);
+    setIsVisible(false);
   };
 
   const submitButtonHandler = async (event: React.MouseEvent) => {
@@ -85,25 +90,23 @@ function HomePage(): JSX.Element {
     }
   };
 
-  const deleteButtonHandler = async (event: React.MouseEvent) => {
+  const deleteButtonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
-    await deleteDoc(doc(db, 'todo', `${selectTodo?.index}`));
-    getDataHandler();
-    dispatch(clearSelectedTodo());
+    await deleteDoc(doc(db, 'todo', todoId));
     setIsLoaded(true);
+    getDataHandler();
   };
 
   const updateButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
-    const updateDocRef = doc(db, 'todo', `${selectTodo?.index}`);
+    const updateDocRef = doc(db, 'todo', `${todoId}`);
     await updateDoc(updateDocRef, {
-      Title: titleValue ? titleValue : selectTodo?.title,
-      Description: textareaValue ? textareaValue : selectTodo?.description,
-      Importance: selectValue ? selectValue : selectTodo?.importance
+      Title: titleValue ? titleValue : selectedTodo?.title,
+      Description: textareaValue ? textareaValue : selectedTodo?.description,
+      Importance: selectValue ? selectValue : selectedTodo?.importance
     });
 
     getDataHandler();
-    dispatch(clearSelectedTodo());
     setIsLoaded(true);
   };
 
@@ -124,31 +127,33 @@ function HomePage(): JSX.Element {
     if (setTitleValue) {
       setTitleValue('');
     }
-    if (setSelectValue) {
-      setSelectValue('');
+    if (setSelectValue && selectedTodo) {
+      setSelectValue(selectedTodo.importance);
+    } else {
+      setSelectValue!('Low');
     }
-  }, [createTodo, selectTodo]);
+  }, [createTodo, isVisible]);
 
   return (
     <>
       <Header />
       <div className="flex py-2 px-4 items-center justify-center overflow-hidden w-screen h-screen relative">
         {isLoaded && <Loader />}
-        {blocks.map((item, index) => {
-          return (
-            <TodoSection
-              key={index}
-              item={item}
-              index={index}
-              dragEnterHandler={dragEnterHandler}
-              dragOverHandler={dragOverHandler}
-              dragLeaveHandler={dragLeaveHandler}
-              dragDropHandler={dragDropHandler}
-              dragStartHandler={dragStartHandler}
-              dragEndHandler={dragEndHandler}
-            />
-          );
-        })}
+        {!isLoaded &&
+          blocks.map((item, index) => {
+            return (
+              <TodoSection
+                key={index}
+                item={item}
+                dragEnterHandler={dragEnterHandler}
+                dragOverHandler={dragOverHandler}
+                dragLeaveHandler={dragLeaveHandler}
+                dragDropHandler={dragDropHandler}
+                dragStartHandler={dragStartHandler}
+                dragEndHandler={dragEndHandler}
+              />
+            );
+          })}
         {createTodo && (
           <Popup
             titleInputChangeHandler={titleInputChangeHandler}
@@ -160,15 +165,15 @@ function HomePage(): JSX.Element {
             submitButtonHandler={submitButtonHandler}
           />
         )}
-        {selectTodo && (
+        {isVisible && (
           <Popup
             titleInputChangeHandler={titleInputChangeHandler}
             textareaChangeHandler={textareaChangeHandler}
             selectChangeHandler={selectChangeHandler}
             selectValue={selectValue}
-            selectTodo={selectTodo}
             deleteButtonHandler={deleteButtonHandler}
             updateButtonHandler={updateButtonHandler}
+            selectedTodo={selectedTodo}
           />
         )}
       </div>
