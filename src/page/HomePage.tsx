@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Header from '../components/Header';
 import useHomePage from '../hooks/use-home-page.hook';
 import {
   addDoc,
@@ -24,6 +23,7 @@ import Sidebar from '../components/Sidebar';
 import PopupCreateProject from '../components/PopupCreateProject';
 import { addProject, setProject } from '../store/slices/projectSlice';
 import Content from '../components/Content';
+import Header from '../components/Header/Header';
 
 function HomePage(): JSX.Element {
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
