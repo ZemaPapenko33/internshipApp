@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import Loader from '../components/Loader';
+import Loader from '../components/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
 import Popup from '../components/Popup';
