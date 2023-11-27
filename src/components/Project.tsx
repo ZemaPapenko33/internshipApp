@@ -1,5 +1,6 @@
 import React from 'react';
 import SettingSVG from '../assets/SettingSVG';
+import ButtonSettings from './ButtonSettings/ButtonSettings';
 
 interface IProjectPayload {
   name: string;
@@ -24,9 +25,9 @@ const Project: React.FC<IProject> = ({ setIdActiveProject, item, setIsSetting })
     <div onClick={setIdActiveProjectHandler}>
       <div className="text-center mb-2 bg-slate-100 select-none flex items-center justify-center">
         <p className="text-lg w-[50%]">{item.name}</p>
-        <button className="w-[10%] flex items-center justify-center" onClick={settingButtonHandler}>
+        <ButtonSettings settingButtonHandler={settingButtonHandler}>
           <SettingSVG />
-        </button>
+        </ButtonSettings>
       </div>
     </div>
   );
