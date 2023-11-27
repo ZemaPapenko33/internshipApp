@@ -1,6 +1,8 @@
 import React from 'react';
 import SettingSVG from '../assets/SettingSVG';
 import ButtonSettings from './ButtonSettings/ButtonSettings';
+import ProjectBlock from './ProjectBlock/ProjectBlock';
+import ProjectName from './ProjectNames/ProjectName';
 
 interface IProjectPayload {
   name: string;
@@ -23,12 +25,12 @@ const Project: React.FC<IProject> = ({ setIdActiveProject, item, setIsSetting })
 
   return (
     <div onClick={setIdActiveProjectHandler}>
-      <div className="text-center mb-2 bg-slate-100 select-none flex items-center justify-center">
-        <p className="text-lg w-[50%]">{item.name}</p>
+      <ProjectBlock>
+        <ProjectName>{item.name}</ProjectName>
         <ButtonSettings settingButtonHandler={settingButtonHandler}>
           <SettingSVG />
         </ButtonSettings>
-      </div>
+      </ProjectBlock>
     </div>
   );
 };
