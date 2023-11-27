@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
+import RegisterButton from '../components/RegisterButton/RegisterButton';
 import useRegisterPage from '../hooks/use-register-page.hook';
 
 function RegisterPage(): JSX.Element {
@@ -32,12 +34,12 @@ function RegisterPage(): JSX.Element {
         />
         {isInvalidEmail && <p className="text-red-500 text-sm mb-3">Invalid Email</p>}
         {isUseEmail && (
-          <p className="text-red-500 text-sm mb-3">
+          <ErrorMessage>
             Email already in use{' '}
             <Link to="/login" className="underline decoration-zinc-500 text-zinc-950">
               go to Login
             </Link>
-          </p>
+          </ErrorMessage>
         )}
         <input
           name="password"
@@ -46,18 +48,14 @@ function RegisterPage(): JSX.Element {
           className="mb-2  rounded px-2 shadow-lg h-[30px] w-[270px] border-2"
           onChange={passwordInputHandler}
         />
-        {passwordLength && (
-          <p className="text-red-500 text-sm">enter a password longer than 8 characters</p>
-        )}
+        {passwordLength && <ErrorMessage>enter a password longer than 8 characters</ErrorMessage>}
         <p className="italic text-gray-500 mb-2">
           already have an account?{' '}
           <Link to="/login" className="underline decoration-zinc-500 text-zinc-950">
-            go to Login
+            Login
           </Link>
         </p>
-        <button className="h-[30px] w-[270px] rounded shadow-lg bg-gray-200 transition-all hover:shadow-xl">
-          Register
-        </button>
+        <RegisterButton>Register</RegisterButton>
       </form>
     </div>
   );

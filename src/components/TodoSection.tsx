@@ -3,8 +3,11 @@ import { useSelector } from 'react-redux';
 import { useForm } from '../context';
 import { RootState } from '../store';
 import { selectFilteredTodos } from '../store/selectors/selectors';
+import SectionName from './SectionName/SectionName';
+import { SectionWrapper } from './SectionWrapper/SectionWrapperStyled';
 
 import Todo from './TodoBlock/Todo';
+import { TodoSectionBlock } from './TodoSectionBlock/TodoSectionBlock';
 
 interface ITodoSectionProps {
   item: string;
@@ -32,17 +35,14 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
     : filterTodo;
 
   return (
-    <div className="flex flex-col h-screen w-[250px] items-center justify-center mr-5  py-5">
-      <h1 className="bg-blue-200 shadow mb-2 px-4 w-[250px] text-center rounded select-none">
-        {item}
-      </h1>
-      <div
-        className="rounded shadow-lg w-[250px] h-full bg-slate-100 py-1 px-4  overflow-y-scroll empty:overflow-y-hidden"
-        onDragEnter={dragEnterHandler}
-        onDragOver={dragOverHandler}
-        onDragLeave={dragLeaveHandler}
-        onDrop={dragDropHandler}
-        data-status={item}
+    <SectionWrapper>
+      <SectionName>{item}</SectionName>
+      <TodoSectionBlock
+        item={item}
+        dragDropHandler={dragDropHandler}
+        dragEnterHandler={dragEnterHandler}
+        dragLeaveHandler={dragLeaveHandler}
+        dragOverHandler={dragOverHandler}
       >
         {filteredTodos.map((newItem) => {
           return (
@@ -58,8 +58,8 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
             />
           );
         })}
-      </div>
-    </div>
+      </TodoSectionBlock>
+    </SectionWrapper>
   );
 };
 

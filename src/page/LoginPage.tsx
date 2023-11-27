@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useLoginPage from '../hooks/use-login-page.hook';
 import { useForm } from '../context';
+import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
 
 function LoginPage(): JSX.Element {
   const { email, password, emailInputHandler, passwordInputHandler } = useForm();
@@ -38,10 +39,8 @@ function LoginPage(): JSX.Element {
           className="mb-2  rounded px-2 shadow-lg h-[30px] w-[270px] border-2"
           onChange={passwordInputHandler}
         />
-        {isMissingPassword && <p className="text-red-500 text-sm">Please, enter password</p>}
-        {isLoginCredential && (
-          <p className="text-red-500 text-sm">login or password entered incorrectly</p>
-        )}
+        {isMissingPassword && <ErrorMessage>Please, enter password</ErrorMessage>}
+        {isLoginCredential && <ErrorMessage>login or password entered incorrectly</ErrorMessage>}
         <p className="italic text-gray-500 mb-2">
           don't have an account?{' '}
           <Link to="/register" className="underline decoration-zinc-500 text-zinc-950">
