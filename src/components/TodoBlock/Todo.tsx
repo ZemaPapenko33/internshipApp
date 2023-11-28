@@ -1,6 +1,9 @@
 import React from 'react';
-import { useForm } from '../context';
-import { EnumImportance } from '../shared/consts/enum';
+import { useForm } from '../../context';
+import { EnumImportance } from '../../shared/consts/enum';
+import DescriptionTodo from '../DescriptionTodo/DescriptionTodo';
+import TitleTodo from '../TitleTodo/TitleTodo';
+import { TodoBlockWrapper } from './TodoBlockStyled';
 
 interface ITodo {
   index: string;
@@ -35,9 +38,7 @@ const Todo: React.FC<ITodo> = ({
     }
   };
 
-  const background = {
-    background: getColor(importance)
-  };
+  const color = getColor(importance);
 
   const onClickHandler = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -45,8 +46,7 @@ const Todo: React.FC<ITodo> = ({
     setTodoId(index);
   };
   return (
-    <div
-      className="flex flex-col shadow-lg py-2 px-4 w-full min-h-[80px] bg-white mb-2 rounded "
+    <TodoBlockWrapper
       draggable={true}
       onDragStart={dragStartHandler}
       onDragEnd={dragEndHandler}
@@ -54,11 +54,9 @@ const Todo: React.FC<ITodo> = ({
       data-status={status}
       onClick={onClickHandler}
     >
-      <p className="mb-2 font-medium">{description}</p>
-      <h1 style={background} className="px-1 w-full">
-        {title}
-      </h1>
-    </div>
+      <DescriptionTodo>{description}</DescriptionTodo>
+      <TitleTodo color={color}>{title}</TitleTodo>
+    </TodoBlockWrapper>
   );
 };
 

@@ -11,6 +11,11 @@ import {
 import React from 'react';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
+import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
+import NameProjectInput from './NameProjectInput/NameProjectInput';
+import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
+import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
+import ProjectButtons from './ProjectButtons';
 
 interface IPopupCreateProject {
   getProjectData?: () => Promise<void>;
@@ -74,56 +79,22 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
   };
 
   return (
-    <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
-      <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
-        <form className="flex flex-col items-start justify-center py-4 px-4 w-[350px] h-[350px]">
-          <input
-            type="text"
-            placeholder="Name project"
-            className="mb-2 shadow-lg rounded border-2 h-[30px] px-2 py-2"
-            onChange={nameProjectInputHandler}
+    <PopupBackgroundWrapper>
+      <PopupWrapper>
+        <FormTodoAndProjectWrapper>
+          <NameProjectInput nameProjectInputHandler={nameProjectInputHandler} />
+          <ProjectButtons
+            isSetting={isSetting}
+            deleteButtonHandler={deleteButtonHandler}
+            renameButtonHandler={renameButtonHandler}
+            addButtonHandler={addButtonHandler}
+            isCreateProject={isCreateProject}
+            closeButtonHandlerByCreate={closeButtonHandlerByCreate}
+            closeButtonHandlerBySetting={closeButtonHandlerBySetting}
           />
-          {isCreateProject && (
-            <div>
-              <button
-                className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                onClick={closeButtonHandlerByCreate}
-              >
-                Close
-              </button>
-              <button
-                className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-                onClick={addButtonHandler}
-              >
-                Add
-              </button>
-            </div>
-          )}
-          {isSetting && (
-            <div>
-              <button
-                className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
-                onClick={closeButtonHandlerBySetting}
-              >
-                Close
-              </button>
-              <button
-                className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                onClick={deleteButtonHandler}
-              >
-                Delete
-              </button>
-              <button
-                className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-                onClick={renameButtonHandler}
-              >
-                Rename
-              </button>
-            </div>
-          )}
-        </form>
-      </div>
-    </div>
+        </FormTodoAndProjectWrapper>
+      </PopupWrapper>
+    </PopupBackgroundWrapper>
   );
 };
 

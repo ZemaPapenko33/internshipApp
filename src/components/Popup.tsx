@@ -1,6 +1,12 @@
 import React from 'react';
 import { useForm } from '../context';
-import { EnumImportance } from '../shared/consts/enum';
+import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
+import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
+import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
+import SelectTodo from './SelectTodo/SelectTodo';
+import TextareaTodo from './TextareaTodo/TextareaTodo';
+import TitleTodoInput from './TitleTodoInput/TitleTodoInput';
+import TodoButtons from './TodoButtons';
 
 interface ITodoPayload {
   status: string;
@@ -49,78 +55,30 @@ const Popup: React.FC<IPopup> = ({
   };
 
   return (
-    <div className="flex items-center w-screen h-screen bg-black absolute justify-center bg-opacity-50">
-      <div className="flex flex-col py-2 px-4 items-center justify-center bg-white w-[350px] h-[350px] rounded  ">
-        <form className="flex flex-col items-start justify-center py-4 px-4 w-[350px] h-[350px]">
-          <input
-            type="text"
-            placeholder="Title"
-            className="mb-2 shadow-lg rounded border-2 h-[30px] px-2 py-2"
-            onChange={titleInputChangeHandler}
-            defaultValue={selectedTodo?.title || ''}
+    <PopupBackgroundWrapper>
+      <PopupWrapper>
+        <FormTodoAndProjectWrapper>
+          <TitleTodoInput
+            selectedTodo={selectedTodo!}
+            titleInputChangeHandler={titleInputChangeHandler!}
           />
-          <textarea
-            className="mb-2 shadow-lg rounded border-2"
-            style={{ resize: 'none' }}
-            cols={30}
-            rows={3}
-            placeholder="Description"
-            onChange={textareaChangeHandler}
-            defaultValue={selectedTodo?.description || ''}
+          <TextareaTodo
+            selectedTodo={selectedTodo!}
+            textareaChangeHandler={textareaChangeHandler!}
           />
-          <select
-            className="shadow-lg rounded border-2 mb-4"
-            onChange={selectChangeHandler}
-            value={selectValue}
-            defaultValue={EnumImportance.LOW}
-          >
-            <option value={EnumImportance.LOW}>Low</option>
-            <option value={EnumImportance.MEDIUM}>Medium</option>
-            <option value={EnumImportance.HIGH}>High</option>
-          </select>
-          <div>
-            {createTodo && (
-              <>
-                <button
-                  className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                  onClick={closeButtonHandlerByCreateTodo}
-                >
-                  Close
-                </button>
-                <button
-                  className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-                  onClick={submitButtonHandler}
-                >
-                  Submit
-                </button>
-              </>
-            )}
-            {isVisible && (
-              <>
-                <button
-                  className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
-                  onClick={closeButtonHandlerByIsVisible}
-                >
-                  Close
-                </button>
-                <button
-                  className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-                  onClick={deleteButtonHandler}
-                >
-                  delete
-                </button>
-                <button
-                  className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-                  onClick={updateButtonHandler}
-                >
-                  Update
-                </button>
-              </>
-            )}
-          </div>
-        </form>
-      </div>
-    </div>
+          <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
+          <TodoButtons
+            isVisible={isVisible}
+            createTodo={createTodo!}
+            deleteButtonHandler={deleteButtonHandler}
+            updateButtonHandler={updateButtonHandler}
+            closeButtonHandlerByCreateTodo={closeButtonHandlerByCreateTodo}
+            closeButtonHandlerByIsVisible={closeButtonHandlerByIsVisible}
+            submitButtonHandler={submitButtonHandler}
+          />
+        </FormTodoAndProjectWrapper>
+      </PopupWrapper>
+    </PopupBackgroundWrapper>
   );
 };
 

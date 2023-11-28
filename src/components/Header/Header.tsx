@@ -1,9 +1,13 @@
 import { signOut } from 'firebase/auth';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useForm } from '../context';
-import { auth } from '../firebase/firebaseConfig';
-import useHomePage from '../hooks/use-home-page.hook';
+import { useForm } from '../../context';
+import { auth } from '../../firebase/firebaseConfig';
+import useHomePage from '../../hooks/use-home-page.hook';
+import CreateButton from '../CreateButton/CreateButton';
+import LogoutButton from '../LogoutButton/LogoutButton';
+import SearchTodoInput from '../SearchTodoInput/SearchTodoInput';
+import { HeaderWrapper } from './HeaderStyled';
 
 function Header() {
   const { setCreateTodo } = useHomePage();
@@ -30,24 +34,11 @@ function Header() {
   };
 
   return (
-    <div className=" py-2 px-4 bg-white shadow h-[50px] w-screen flex justify-around items-center">
-      <input
-        type="text"
-        className=" py-2 px-4 h-[30px] w-[270px] rounded border-2"
-        placeholder="Search todo"
-        onChange={searchInputChangeHandler}
-      ></input>
-      <button
-        className="rounded bg-blue-500 h-[30px] w-[270px] text-white"
-        onClick={createButtonHandler}
-      >
-        Create
-      </button>
-
-      <button className="rounded bg-blue-500 h-[30px] w-[270px] text-white" onClick={logOutHandler}>
-        Log out
-      </button>
-    </div>
+    <HeaderWrapper>
+      <SearchTodoInput searchInputChangeHandler={searchInputChangeHandler} />
+      <CreateButton createButtonHandler={createButtonHandler} />
+      <LogoutButton logOutHandler={logOutHandler} />
+    </HeaderWrapper>
   );
 }
 
