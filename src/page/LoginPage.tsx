@@ -3,6 +3,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import useLoginPage from '../hooks/use-login-page.hook';
 import { useForm } from '../context';
 import ErrorMessage from '../components/ErrorMessage/ErrorMessage';
+import EmailInput from '../components/EmailInput/EmailInput';
+import PasswordInput from '../components/PasswordInput/PasswordInput';
+import SubtitleForm from '../components/SubtitleForm/SubtitleForm';
+import FormRegisterAndAuth from '../components/FormRegisterAndAuth/FormRegisterAndAuth';
+import LoginButton from '../components/LoginButton/LoginButton';
+import GithubButton from '../components/GithubButton/GithubButton';
+import GoogleButton from '../components/GoogleButton/GoogleButton';
+import { RegisterAndAuthPageWrapper } from '../components/RegisterPageWrapper/RegisterAndAuthPageWrapper';
 
 function LoginPage(): JSX.Element {
   const { email, password, emailInputHandler, passwordInputHandler } = useForm();
@@ -23,52 +31,32 @@ function LoginPage(): JSX.Element {
   }, [user]);
 
   return (
-    <div className="flex flex-col items-center justify-center  w-screen h-screen py-2 px-4">
-      <form className="flex flex-col items-center justify-center mb-3" onSubmit={formHandler}>
-        <input
-          name="email"
-          type="email"
-          placeholder="Email"
-          className="mb-3 rounded px-2 shadow-lg h-[30px] w-[270px] border-2"
-          onChange={emailInputHandler}
-        />
-        <input
-          name="password"
-          type="password"
-          placeholder="Password"
-          className="mb-2  rounded px-2 shadow-lg h-[30px] w-[270px] border-2"
-          onChange={passwordInputHandler}
-        />
+    <RegisterAndAuthPageWrapper>
+      <FormRegisterAndAuth formHandler={formHandler}>
+        <EmailInput emailInputHandler={emailInputHandler} />
+        <PasswordInput passwordInputHandler={passwordInputHandler} />
         {isMissingPassword && <ErrorMessage>Please, enter password</ErrorMessage>}
         {isLoginCredential && <ErrorMessage>login or password entered incorrectly</ErrorMessage>}
-        <p className="italic text-gray-500 mb-2">
+        <SubtitleForm>
           don't have an account?{' '}
           <Link to="/register" className="underline decoration-zinc-500 text-zinc-950">
-            go to register
+            Register
           </Link>
-        </p>
-        <button className="h-[30px] w-[270px] rounded shadow-lg bg-gray-200 transition-all hover:shadow-xl">
-          log in
-        </button>
-      </form>
+        </SubtitleForm>
+        <LoginButton> Log in</LoginButton>
+      </FormRegisterAndAuth>
       <div className="flex items-center mb-3">
         <div className="h-px bg-gray-400 w-16"></div>
         <span className="mx-2 text-gray-500">OR</span>
         <div className="h-px bg-gray-400 w-16"></div>
       </div>
-      <button
-        className="rounded bg-yellow-500 shadow-lg w-[270px] h-[30px] mb-3 hover:shadow-xl"
-        onClick={googleButtonHandler}
-      >
-        authorization with google
-      </button>
-      <button
-        className="rounded bg-[#000] text-white  shadow-lg w-[270px] h-[30px] hover:shadow-xl"
-        onClick={githubButtonHandler}
-      >
-        authorization with github
-      </button>
-    </div>
+      <GoogleButton googleButtonHandler={googleButtonHandler}>
+        Authorization with google
+      </GoogleButton>
+      <GithubButton githubButtonHandler={githubButtonHandler}>
+        Authorization with github
+      </GithubButton>
+    </RegisterAndAuthPageWrapper>
   );
 }
 
