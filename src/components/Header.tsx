@@ -8,9 +8,10 @@ import useHomePage from '../hooks/use-home-page.hook';
 function Header() {
   const { setCreateTodo } = useHomePage();
   const navigateToLoginPage = useNavigate();
-  const { setSearchTodo } = useForm();
+  const { setSearchTodo, setIdActiveProject } = useForm();
   const logOutHandler = (event: React.MouseEvent) => {
     event.preventDefault();
+    setIdActiveProject('');
     signOut(auth).then(() => {
       localStorage.clear();
       navigateToLoginPage('/login');
@@ -42,6 +43,7 @@ function Header() {
       >
         Create
       </button>
+
       <button className="rounded bg-blue-500 h-[30px] w-[270px] text-white" onClick={logOutHandler}>
         Log out
       </button>

@@ -22,13 +22,21 @@ const Todo: React.FC<ITodo> = ({
   dragEndHandler
 }) => {
   const { setIsVisible, setTodoId } = useForm();
+  const getColor = (importances: string): string => {
+    switch (importances) {
+      case `${EnumImportance.LOW}`:
+        return 'green';
+      case `${EnumImportance.MEDIUM}`:
+        return 'yellow';
+      case `${EnumImportance.HIGH}`:
+        return 'red';
+      default:
+        return 'green';
+    }
+  };
+
   const background = {
-    background:
-      importance === EnumImportance.LOW
-        ? 'green'
-        : importance === EnumImportance.MEDIUM
-        ? 'yellow'
-        : 'red'
+    background: getColor(importance)
   };
 
   const onClickHandler = (event: React.MouseEvent) => {
@@ -38,7 +46,7 @@ const Todo: React.FC<ITodo> = ({
   };
   return (
     <div
-      className="flex flex-col shadow-lg py-2 px-4 w-full h-[80px] bg-white mb-2 rounded "
+      className="flex flex-col shadow-lg py-2 px-4 w-full min-h-[80px] bg-white mb-2 rounded "
       draggable={true}
       onDragStart={dragStartHandler}
       onDragEnd={dragEndHandler}

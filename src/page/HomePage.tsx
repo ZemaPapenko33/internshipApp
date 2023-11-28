@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Header from '../components/Header';
 import useHomePage from '../hooks/use-home-page.hook';
 import {
   addDoc,
@@ -13,14 +12,18 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { useNavigate } from 'react-router-dom';
-import TodoSection from '../components/TodoSection';
-import Loader from '../components/Loader';
+import Loader from '../components/Loader/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { addTodo, setTodo } from '../store/slices/todoSlice';
 import Popup from '../components/Popup';
 import { useForm } from '../context';
 import { selectTodoById } from '../store/selectors/selectors';
 import { RootState } from '../store';
+import Sidebar from '../components/Sidebar';
+import PopupCreateProject from '../components/PopupCreateProject';
+import { addProject, setProject } from '../store/slices/projectSlice';
+import Content from '../components/Content';
+import Header from '../components/Header/Header';
 
 function HomePage(): JSX.Element {
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
@@ -40,8 +43,8 @@ function HomePage(): JSX.Element {
     titleInputChangeHandler,
     textareaChangeHandler,
     selectChangeHandler,
-    isLoaded,
-    setIsLoaded,
+    isLoading,
+    setIsLoading,
     setTextareaValue,
     setTitleValue,
     setSelectValue
@@ -49,15 +52,36 @@ function HomePage(): JSX.Element {
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
   const dispatch = useDispatch();
-  const { isVisible, todoId, setIsVisible } = useForm();
+  const { isVisible, todoId, setIsVisible, isCreateProject, idActiveProject, isSetting } =
+    useForm();
   const selectedTodo = useSelector((state: RootState) =>
     todoId ? selectTodoById(todoId)(state) : null
   );
 
+  const getProjectData = async () => {
+    dispatch(setProject([]));
+    const projectRef = collection(db, 'projects');
+    const q = query(projectRef, where('email', '==', `${email?.toLocaleLowerCase()}`));
+    const Snapshot = await getDocs(q);
+    Snapshot.forEach((docs) => {
+      const { name } = docs.data();
+      const project = {
+        name: name,
+        id: docs.id
+      };
+      dispatch(addProject(project));
+    });
+    setIsLoading(false);
+  };
+
   const getDataHandler = async () => {
     dispatch(setTodo([]));
     const todoRef = collection(db, 'todo');
-    const q = query(todoRef, where('Email', '==', `${email?.toLocaleLowerCase()}`));
+    const q = query(
+      todoRef,
+      where('Email', '==', `${email?.toLocaleLowerCase()}`),
+      where('ProjectId', '==', `${idActiveProject}`)
+    );
     const Snapshot = await getDocs(q);
     Snapshot.forEach((docs) => {
       const { Title, Description, Importance, Status } = docs.data();
@@ -70,7 +94,7 @@ function HomePage(): JSX.Element {
       };
       dispatch(addTodo(todo));
     });
-    setIsLoaded(false);
+    setIsLoading(false);
     setIsVisible(false);
   };
 
@@ -81,10 +105,11 @@ function HomePage(): JSX.Element {
       Description: `${textareaValue}`,
       Importance: `${selectValue}`,
       Email: `${email?.toLocaleLowerCase()}`,
-      Status: 'TO DO'
+      Status: 'TO DO',
+      ProjectId: idActiveProject
     });
     getDataHandler();
-    setIsLoaded(true);
+    setIsLoading(true);
     if (setCreateTodo) {
       setCreateTodo(false);
     }
@@ -93,7 +118,7 @@ function HomePage(): JSX.Element {
   const deleteButtonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     await deleteDoc(doc(db, 'todo', todoId));
-    setIsLoaded(true);
+    setIsLoading(true);
     getDataHandler();
   };
 
@@ -107,7 +132,7 @@ function HomePage(): JSX.Element {
     });
 
     getDataHandler();
-    setIsLoaded(true);
+    setIsLoading(true);
   };
 
   useEffect(() => {
@@ -117,8 +142,12 @@ function HomePage(): JSX.Element {
   }, [user]);
 
   useEffect(() => {
-    getDataHandler();
+    getProjectData();
   }, []);
+
+  useEffect(() => {
+    getDataHandler();
+  }, [idActiveProject]);
 
   useEffect(() => {
     if (setTextareaValue) {
@@ -135,25 +164,24 @@ function HomePage(): JSX.Element {
   }, [createTodo, isVisible]);
 
   return (
-    <>
+    <div className="overscroll-x-none overflow-x-hidden">
       <Header />
-      <div className="flex py-2 px-4 items-center justify-center overflow-hidden w-screen h-screen relative">
-        {isLoaded && <Loader />}
-        {!isLoaded &&
-          blocks.map((item, index) => {
-            return (
-              <TodoSection
-                key={index}
-                item={item}
-                dragEnterHandler={dragEnterHandler}
-                dragOverHandler={dragOverHandler}
-                dragLeaveHandler={dragLeaveHandler}
-                dragDropHandler={dragDropHandler}
-                dragStartHandler={dragStartHandler}
-                dragEndHandler={dragEndHandler}
-              />
-            );
-          })}
+      <div className="flex py-2  items-center  overflow-hidden w-screen h-screen relative ">
+        <Sidebar />
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <Content
+            blocks={blocks}
+            dragDropHandler={dragDropHandler}
+            dragEndHandler={dragEndHandler}
+            dragStartHandler={dragStartHandler}
+            dragOverHandler={dragOverHandler}
+            dragEnterHandler={dragEnterHandler}
+            dragLeaveHandler={dragLeaveHandler}
+          />
+        )}
+
         {createTodo && (
           <Popup
             titleInputChangeHandler={titleInputChangeHandler}
@@ -176,11 +204,10 @@ function HomePage(): JSX.Element {
             selectedTodo={selectedTodo}
           />
         )}
+        {isCreateProject && <PopupCreateProject getProjectData={getProjectData} />}
+        {isSetting && <PopupCreateProject getProjectData={getProjectData} />}
       </div>
-
-      {createTodo && <div className="w-screen h-screen bg-black"></div>}
-
-    </>
+    </div>
   );
 }
 
