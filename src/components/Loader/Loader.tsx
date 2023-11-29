@@ -1,6 +1,7 @@
 import React from 'react';
 import LoaderSVG from '../../assets/LoaderSVG';
 import { LoaderWrapper } from './LoaderWrapperStyled';
+export {};
 
 function Loader() {
   return (
