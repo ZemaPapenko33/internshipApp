@@ -1,10 +1,22 @@
-import { doc, updateDoc } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  query,
+  updateDoc,
+  where
+} from 'firebase/firestore';
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
 import { EnumImportance } from '../shared/enum';
-import { updateStatusById } from '../store/slices/todoSlice';
+import { RootState } from '../store';
+import { selectTodoById } from '../store/selectors/selectors';
+import { addProject, setProject } from '../store/slices/projectSlice';
+import { addTodo, setTodo, updateStatusById } from '../store/slices/todoSlice';
 
 interface IHomePageHook {
   idTarget: string;
@@ -28,16 +40,25 @@ interface IHomePageHook {
   setTitleValue?: React.Dispatch<React.SetStateAction<string>>;
   setTextareaValue?: React.Dispatch<React.SetStateAction<string>>;
   setSelectValue?: React.Dispatch<React.SetStateAction<string>>;
+  submitButtonHandler: (event: React.MouseEvent) => void;
+  getDataHandler: () => Promise<void>;
+  getProjectData: () => Promise<void>;
+  updateButtonHandler: (event: React.MouseEvent) => void;
+  deleteButtonHandler: (event: React.MouseEvent) => void;
 }
 
 function useHomePage(): IHomePageHook {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { createTodo, setCreateTodo } = useForm();
+  const { createTodo, setCreateTodo, idActiveProject, setIsVisible, todoId } = useForm();
   const [idTarget, setIdTarget] = useState<string>('');
   const [textareaValue, setTextareaValue] = useState<string>('');
   const [selectValue, setSelectValue] = useState<string>(EnumImportance.LOW);
   const [titleValue, setTitleValue] = useState<string>('');
   const dispatch = useDispatch();
+  const email = localStorage.getItem('email');
+  const selectedTodo = useSelector((state: RootState) =>
+    todoId ? selectTodoById(todoId)(state) : null
+  );
 
   const dragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
     setTimeout(() => {
@@ -104,6 +125,83 @@ function useHomePage(): IHomePageHook {
     setSelectValue(event.target.value);
   };
 
+  const getDataHandler = async () => {
+    dispatch(setTodo([]));
+    const todoRef = collection(db, 'todo');
+    const q = query(
+      todoRef,
+      where('Email', '==', `${email?.toLocaleLowerCase()}`),
+      where('ProjectId', '==', `${idActiveProject}`)
+    );
+    const Snapshot = await getDocs(q);
+    Snapshot.forEach((docs) => {
+      const { Title, Description, Importance, Status } = docs.data();
+      const todo = {
+        title: Title,
+        description: Description,
+        importance: Importance,
+        status: Status,
+        id: docs.id
+      };
+      dispatch(addTodo(todo));
+    });
+    setIsLoading(false);
+    setIsVisible(false);
+  };
+
+  const submitButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    await addDoc(collection(db, 'todo'), {
+      Title: `${titleValue}`,
+      Description: `${textareaValue}`,
+      Importance: `${selectValue}`,
+      Email: `${email?.toLocaleLowerCase()}`,
+      Status: 'TO DO',
+      ProjectId: idActiveProject
+    });
+    getDataHandler();
+    setIsLoading(true);
+    if (setCreateTodo) {
+      setCreateTodo(false);
+    }
+  };
+
+  const getProjectData = async () => {
+    dispatch(setProject([]));
+    const projectRef = collection(db, 'projects');
+    const q = query(projectRef, where('email', '==', `${email?.toLocaleLowerCase()}`));
+    const Snapshot = await getDocs(q);
+    Snapshot.forEach((docs) => {
+      const { name } = docs.data();
+      const project = {
+        name: name,
+        id: docs.id
+      };
+      dispatch(addProject(project));
+    });
+    setIsLoading(false);
+  };
+
+  const updateButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    const updateDocRef = doc(db, 'todo', `${todoId}`);
+    await updateDoc(updateDocRef, {
+      Title: titleValue ? titleValue : selectedTodo?.title,
+      Description: textareaValue ? textareaValue : selectedTodo?.description,
+      Importance: selectValue ? selectValue : selectedTodo?.importance
+    });
+
+    getDataHandler();
+    setIsLoading(true);
+  };
+
+  const deleteButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    await deleteDoc(doc(db, 'todo', todoId));
+    setIsLoading(true);
+    getDataHandler();
+  };
+
   return {
     idTarget,
     setIdTarget,
@@ -125,7 +223,12 @@ function useHomePage(): IHomePageHook {
     setIsLoading,
     setTextareaValue,
     setTitleValue,
-    setSelectValue
+    setSelectValue,
+    submitButtonHandler,
+    getDataHandler,
+    getProjectData,
+    updateButtonHandler,
+    deleteButtonHandler
   };
 }
 

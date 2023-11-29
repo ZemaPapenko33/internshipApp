@@ -25,19 +25,19 @@ const TodoButtons: React.FC<ITodoButtons> = ({
   return (
     <>
       {createTodo && (
-        <>
+        <div>
           <RedButtonsWrapper create="create" onClick={closeButtonHandlerByCreateTodo}>
             Close
           </RedButtonsWrapper>
           <GreenButtonsWrapper onClick={submitButtonHandler}>Submit</GreenButtonsWrapper>
-        </>
+        </div>
       )}
       {isVisible && (
-        <>
+        <div>
           <RedButtonsWrapper onClick={closeButtonHandlerByIsVisible}>Close</RedButtonsWrapper>
           <DeleteButton deleteButtonHandler={deleteButtonHandler!}>delete</DeleteButton>
           <GreenButtonsWrapper onClick={updateButtonHandler}>Update</GreenButtonsWrapper>
-        </>
+        </div>
       )}
     </>
   );
