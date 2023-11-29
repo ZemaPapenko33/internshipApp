@@ -151,18 +151,22 @@ function useHomePage(): IHomePageHook {
 
   const submitButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
-    await addDoc(collection(db, 'todo'), {
-      Title: `${titleValue}`,
-      Description: `${textareaValue}`,
-      Importance: `${selectValue}`,
-      Email: `${email?.toLocaleLowerCase()}`,
-      Status: 'TO DO',
-      ProjectId: idActiveProject
-    });
-    getDataHandler();
-    setIsLoading(true);
-    if (setCreateTodo) {
-      setCreateTodo(false);
+    if (textareaValue && titleValue) {
+      await addDoc(collection(db, 'todo'), {
+        Title: `${titleValue}`,
+        Description: `${textareaValue}`,
+        Importance: `${selectValue}`,
+        Email: `${email?.toLocaleLowerCase()}`,
+        Status: 'TO DO',
+        ProjectId: idActiveProject
+      });
+      getDataHandler();
+      setIsLoading(true);
+      if (setCreateTodo) {
+        setCreateTodo(false);
+      }
+    } else {
+      alert('Пожалуйста, заполните все поля');
     }
   };
 
