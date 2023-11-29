@@ -1,10 +1,11 @@
 import React from 'react';
+import DeleteButton from './DeleteButton/DeleteButton';
 
 interface ITodoButtons {
   createTodo: boolean;
   closeButtonHandlerByCreateTodo: () => void;
   updateButtonHandler?: (event: React.MouseEvent) => void;
-  deleteButtonHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  deleteButtonHandler?: (event: React.MouseEvent) => void;
   submitButtonHandler?: (event: React.MouseEvent) => void;
   isVisible: boolean;
   closeButtonHandlerByIsVisible: () => void;
@@ -45,12 +46,7 @@ const TodoButtons: React.FC<ITodoButtons> = ({
           >
             Close
           </button>
-          <button
-            className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-            onClick={deleteButtonHandler}
-          >
-            delete
-          </button>
+          <DeleteButton deleteButtonHandler={deleteButtonHandler!}>delete</DeleteButton>
           <button
             className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
             onClick={updateButtonHandler}

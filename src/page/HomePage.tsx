@@ -115,7 +115,7 @@ function HomePage(): JSX.Element {
     }
   };
 
-  const deleteButtonHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
+  const deleteButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
     await deleteDoc(doc(db, 'todo', todoId));
     setIsLoading(true);
