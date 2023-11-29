@@ -1,5 +1,7 @@
 import React from 'react';
 import DeleteButton from './DeleteButton/DeleteButton';
+import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
+import { RedButtonsWrapper } from './RedButtons/RedButtonsStyled';
 
 interface ITodoButtons {
   createTodo: boolean;
@@ -21,41 +23,23 @@ const TodoButtons: React.FC<ITodoButtons> = ({
   updateButtonHandler
 }) => {
   return (
-    <div>
+    <>
       {createTodo && (
         <>
-          <button
-            className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-            onClick={closeButtonHandlerByCreateTodo}
-          >
+          <RedButtonsWrapper create="create" onClick={closeButtonHandlerByCreateTodo}>
             Close
-          </button>
-          <button
-            className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-            onClick={submitButtonHandler}
-          >
-            Submit
-          </button>
+          </RedButtonsWrapper>
+          <GreenButtonsWrapper onClick={submitButtonHandler}>Submit</GreenButtonsWrapper>
         </>
       )}
       {isVisible && (
         <>
-          <button
-            className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
-            onClick={closeButtonHandlerByIsVisible}
-          >
-            Close
-          </button>
+          <RedButtonsWrapper onClick={closeButtonHandlerByIsVisible}>Close</RedButtonsWrapper>
           <DeleteButton deleteButtonHandler={deleteButtonHandler!}>delete</DeleteButton>
-          <button
-            className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-            onClick={updateButtonHandler}
-          >
-            Update
-          </button>
+          <GreenButtonsWrapper onClick={updateButtonHandler}>Update</GreenButtonsWrapper>
         </>
       )}
-    </div>
+    </>
   );
 };
 

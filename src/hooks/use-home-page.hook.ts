@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
-import { EnumImportance } from '../shared/consts/enum';
+import { EnumImportance } from '../shared/enum';
 import { updateStatusById } from '../store/slices/todoSlice';
 
 interface IHomePageHook {

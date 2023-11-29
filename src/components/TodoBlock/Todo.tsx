@@ -1,6 +1,6 @@
 import React from 'react';
 import { useForm } from '../../context';
-import { EnumImportance } from '../../shared/consts/enum';
+import { EnumImportance } from '../../shared/enum';
 import DescriptionTodo from '../DescriptionTodo/DescriptionTodo';
 import TitleTodo from '../TitleTodo/TitleTodo';
 import { TodoBlockWrapper } from './TodoBlockStyled';
