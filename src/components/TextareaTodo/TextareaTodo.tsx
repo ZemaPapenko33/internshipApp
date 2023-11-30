@@ -1,3 +1,4 @@
+import React from 'react';
 import { TextareaTodoWrapper } from './TextareaTodoStyled';
 
 interface ITodoPayload {
