@@ -6,7 +6,7 @@ interface IDescriptionTodo {
 }
 
 const DescriptionTodo: React.FC<IDescriptionTodo> = ({ children }) => {
-  return <DescriptionTodoWrapper>{children}</DescriptionTodoWrapper>;
+  return <DescriptionTodoWrapper draggable={false}>{children}</DescriptionTodoWrapper>;
 };
 
 export default DescriptionTodo;

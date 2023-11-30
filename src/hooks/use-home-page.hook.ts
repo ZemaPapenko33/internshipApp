@@ -94,19 +94,6 @@ function useHomePage(): IHomePageHook {
 
     const dataStatus = target.getAttribute('data-status');
 
-    if (dataStatus === 'DONE') {
-      if (draggedElement) {
-        draggedElement.classList.remove('bg-white');
-        draggedElement.classList.add('bg-gray-500');
-        draggedElement.classList.add('line-through');
-        draggedElement.style.borderLeft = 'none';
-      }
-    } else {
-      draggedElement?.classList.remove('line-through');
-      draggedElement?.classList.remove('bg-gray-500');
-      draggedElement?.classList.add('bg-white');
-    }
-
     const id = draggedElement?.id as string;
     dispatch(updateStatusById({ id, dataStatus: `${dataStatus}` }));
     const updateDocRef = doc(db, 'todo', id);

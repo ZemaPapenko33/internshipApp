@@ -12,4 +12,8 @@ export const TodoBlockWrapper = styled.div`
   margin-bottom: 0.5rem;
   border-radius: 0.25rem;
   background-color: rgb(255 255 255);
+
+  &.hidden {
+    display: none;
+  }
 `;
