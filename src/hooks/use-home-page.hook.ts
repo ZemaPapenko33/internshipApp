@@ -56,9 +56,7 @@ function useHomePage(): IHomePageHook {
   const [titleValue, setTitleValue] = useState<string>('');
   const dispatch = useDispatch();
   const email = localStorage.getItem('email');
-  const selectedTodo = useSelector((state: RootState) =>
-    todoId ? selectTodoById(todoId)(state) : null
-  );
+  const selectedTodo = useSelector((state: RootState) => selectTodoById(todoId)(state));
 
   const dragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
     setTimeout(() => {
