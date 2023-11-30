@@ -79,7 +79,7 @@ function HomePage(): JSX.Element {
         <Sidebar />
         {isLoading ? (
           <Loader />
-        ) : (
+        ) : idActiveProject ? (
           <Content
             blocks={blocks}
             dragDropHandler={dragDropHandler}
@@ -89,6 +89,8 @@ function HomePage(): JSX.Element {
             dragEnterHandler={dragEnterHandler}
             dragLeaveHandler={dragLeaveHandler}
           />
+        ) : (
+          <div>none</div>
         )}
 
         {createTodo && (
