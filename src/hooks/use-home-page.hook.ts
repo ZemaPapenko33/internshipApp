@@ -49,7 +49,15 @@ interface IHomePageHook {
 
 function useHomePage(): IHomePageHook {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const { createTodo, setCreateTodo, idActiveProject, setIsVisible, todoId } = useForm();
+  const {
+    createTodo,
+    setCreateTodo,
+    idActiveProject,
+    setIsVisible,
+    todoId,
+    nameProject,
+    setIdActiveProject
+  } = useForm();
   const [idTarget, setIdTarget] = useState<string>('');
   const [textareaValue, setTextareaValue] = useState<string>('');
   const [selectValue, setSelectValue] = useState<string>(EnumImportance.LOW);
@@ -162,6 +170,9 @@ function useHomePage(): IHomePageHook {
     const Snapshot = await getDocs(q);
     Snapshot.forEach((docs) => {
       const { name } = docs.data();
+      if (!idActiveProject && name === nameProject) {
+        setIdActiveProject(`${docs.id}`);
+      }
       const project = {
         name: name,
         id: docs.id

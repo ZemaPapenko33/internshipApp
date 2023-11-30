@@ -2,6 +2,7 @@ import React from 'react';
 import { useForm } from '../../context';
 import { EnumImportance } from '../../shared/enum';
 import DescriptionTodo from '../DescriptionTodo/DescriptionTodo';
+import ImportanceCircle from '../ImportanceCircle/ImportanceCircle';
 import TitleTodo from '../TitleTodo/TitleTodo';
 import { TodoBlockWrapper } from './TodoBlockStyled';
 
@@ -25,6 +26,7 @@ const Todo: React.FC<ITodo> = ({
   dragEndHandler
 }) => {
   const { setIsVisible, setTodoId } = useForm();
+
   const getColor = (importances: string): string => {
     switch (importances) {
       case `${EnumImportance.LOW}`:
@@ -54,8 +56,10 @@ const Todo: React.FC<ITodo> = ({
       data-status={status}
       onClick={onClickHandler}
     >
+      <TitleTodo>
+        {title} <ImportanceCircle color={color} />
+      </TitleTodo>
       <DescriptionTodo>{description}</DescriptionTodo>
-      <TitleTodo color={color}>{title}</TitleTodo>
     </TodoBlockWrapper>
   );
 };

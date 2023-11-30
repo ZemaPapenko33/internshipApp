@@ -19,7 +19,7 @@ const TextareaTodo: React.FC<ITextareaTodo> = ({ textareaChangeHandler, selected
     <TextareaTodoWrapper
       style={{ resize: 'none' }}
       cols={30}
-      rows={3}
+      rows={1}
       placeholder="Description"
       onChange={textareaChangeHandler}
       defaultValue={selectedTodo?.description || ''}

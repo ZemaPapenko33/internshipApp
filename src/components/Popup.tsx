@@ -1,6 +1,10 @@
 import React from 'react';
+import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
+import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
+import LineSidebar from './LineSidebar/LineSidebar';
+import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
 import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
 import SelectTodo from './SelectTodo/SelectTodo';
@@ -41,7 +45,7 @@ const Popup: React.FC<IPopup> = ({
   selectValue,
   selectedTodo
 }) => {
-  const { setIsVisible, isVisible, setTodoId } = useForm();
+  const { setIsVisible, isVisible, setTodoId, idActiveProject, setIsCreateProject } = useForm();
 
   const closeButtonHandlerByIsVisible = () => {
     setIsVisible(false);
@@ -57,6 +61,14 @@ const Popup: React.FC<IPopup> = ({
   return (
     <PopupBackgroundWrapper>
       <PopupWrapper>
+        <PopupSVGWrapper className="flex items-center justify-end w-full">
+          <CloseSVG
+            createTodo={createTodo!}
+            closeButtonHandlerByCreateTodo={closeButtonHandlerByCreateTodo}
+            closeButtonHandlerByIsVisible={closeButtonHandlerByIsVisible}
+            isVisible={isVisible}
+          />
+        </PopupSVGWrapper>
         <FormTodoAndProjectWrapper>
           <TitleTodoInput
             selectedTodo={selectedTodo!}
@@ -67,16 +79,24 @@ const Popup: React.FC<IPopup> = ({
             textareaChangeHandler={textareaChangeHandler!}
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
-          <TodoButtons
-            isVisible={isVisible}
-            createTodo={createTodo!}
-            deleteButtonHandler={deleteButtonHandler}
-            updateButtonHandler={updateButtonHandler}
-            closeButtonHandlerByCreateTodo={closeButtonHandlerByCreateTodo}
-            closeButtonHandlerByIsVisible={closeButtonHandlerByIsVisible}
-            submitButtonHandler={submitButtonHandler}
-          />
+          {idActiveProject && (
+            <TodoButtons
+              isVisible={isVisible}
+              createTodo={createTodo!}
+              deleteButtonHandler={deleteButtonHandler}
+              updateButtonHandler={updateButtonHandler}
+              submitButtonHandler={submitButtonHandler}
+            />
+          )}
         </FormTodoAndProjectWrapper>
+        {!idActiveProject && (
+          <>
+            <LineSidebar />
+            <CreateProjectButton setIsCreateProject={setIsCreateProject}>
+              Create project
+            </CreateProjectButton>
+          </>
+        )}
       </PopupWrapper>
     </PopupBackgroundWrapper>
   );

@@ -90,7 +90,7 @@ function HomePage(): JSX.Element {
             dragLeaveHandler={dragLeaveHandler}
           />
         ) : (
-          <div>none</div>
+          <div></div>
         )}
 
         {createTodo && (
