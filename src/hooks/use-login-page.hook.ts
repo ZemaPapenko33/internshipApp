@@ -7,7 +7,7 @@ import {
 import React, { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
-import { EnumErrors } from '../shared/consts/enum';
+import { EnumErrors } from '../shared/enum';
 
 interface ILoginPageHook {
   isMissingPassword: boolean;

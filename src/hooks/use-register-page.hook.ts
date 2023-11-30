@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
 import { PASSWORD_LENGTH_MIN } from '../shared/consts/authorization';
-import { EnumErrors } from '../shared/consts/enum';
+import { EnumErrors } from '../shared/enum';
 import { useForm } from '../context';
 
 interface IRegisterPageHook {

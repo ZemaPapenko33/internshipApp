@@ -1,4 +1,4 @@
-import { EnumImportance } from '../../shared/consts/enum';
+import { EnumImportance } from '../../shared/enum';
 import { SelectTodoWrapper } from './SelectTodoStyled';
 
 interface ISelectTodo {

@@ -35,12 +35,16 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
 
   const addButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
-    await addDoc(collection(db, 'projects'), {
-      name: nameProject,
-      email: `${email?.toLocaleLowerCase()}`
-    });
-    setIsCreateProject(false);
-    getProjectData!();
+    if (nameProject) {
+      await addDoc(collection(db, 'projects'), {
+        name: nameProject,
+        email: `${email?.toLocaleLowerCase()}`
+      });
+      setIsCreateProject(false);
+      getProjectData!();
+    } else {
+      alert('Пожалуйста заполните поле');
+    }
   };
 
   const deleteDocumentById = async (id: string) => {

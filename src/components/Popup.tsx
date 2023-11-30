@@ -23,7 +23,7 @@ interface IPopup {
   setCreateTodo?: React.Dispatch<React.SetStateAction<boolean>>;
   createTodo?: boolean;
   updateButtonHandler?: (event: React.MouseEvent) => void;
-  deleteButtonHandler?: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  deleteButtonHandler?: (event: React.MouseEvent) => void;
   submitButtonHandler?: (event: React.MouseEvent) => void;
   selectValue?: string;
   selectedTodo?: ITodoPayload | null;

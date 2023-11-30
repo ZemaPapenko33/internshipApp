@@ -1,3 +1,7 @@
+import DeleteButton from './DeleteButton/DeleteButton';
+import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
+import { RedButtonsWrapper } from './RedButtons/RedButtonsStyled';
+
 interface IProjectButtons {
   isCreateProject: boolean;
   isSetting: boolean;
@@ -18,46 +22,23 @@ const ProjectButtons: React.FC<IProjectButtons> = ({
   renameButtonHandler
 }) => {
   return (
-    <div>
+    <>
       {isCreateProject && (
         <div>
-          <button
-            className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-            onClick={closeButtonHandlerByCreate}
-          >
+          <RedButtonsWrapper create="create" onClick={closeButtonHandlerByCreate}>
             Close
-          </button>
-          <button
-            className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-            onClick={addButtonHandler}
-          >
-            Add
-          </button>
+          </RedButtonsWrapper>
+          <GreenButtonsWrapper onClick={addButtonHandler}>Add</GreenButtonsWrapper>
         </div>
       )}
       {isSetting && (
         <div>
-          <button
-            className="mr-2 shadow-lg bg-white text-black rounded border-2 border-red-500 w-[100px]"
-            onClick={closeButtonHandlerBySetting}
-          >
-            Close
-          </button>
-          <button
-            className="mr-2 shadow-lg bg-red-500 text-white rounded border-2 w-[100px]"
-            onClick={deleteButtonHandler}
-          >
-            Delete
-          </button>
-          <button
-            className="shadow-lg rounded border-2 w-[100px] bg-green-500 text-white"
-            onClick={renameButtonHandler}
-          >
-            Rename
-          </button>
+          <RedButtonsWrapper onClick={closeButtonHandlerBySetting}>Close</RedButtonsWrapper>
+          <DeleteButton deleteButtonHandler={deleteButtonHandler}> Delete</DeleteButton>
+          <GreenButtonsWrapper onClick={renameButtonHandler}>Rename</GreenButtonsWrapper>
         </div>
       )}
-    </div>
+    </>
   );
 };
 
