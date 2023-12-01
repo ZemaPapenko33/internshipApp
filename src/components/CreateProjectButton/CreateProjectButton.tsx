@@ -3,12 +3,12 @@ import { CreateProjectButtonWrapper } from './CreateProjectButtonStyled';
 
 interface ICreateProjectButton {
   children: React.ReactNode;
-  setIsCreateProject: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsMissProject: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateProjectButton: React.FC<ICreateProjectButton> = ({ children, setIsCreateProject }) => {
+const CreateProjectButton: React.FC<ICreateProjectButton> = ({ children, setIsMissProject }) => {
   const clickHandler = () => {
-    setIsCreateProject(true);
+    setIsMissProject(true);
   };
   return <CreateProjectButtonWrapper onClick={clickHandler}>{children}</CreateProjectButtonWrapper>;
 };

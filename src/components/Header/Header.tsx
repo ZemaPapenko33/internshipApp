@@ -5,6 +5,8 @@ import { useForm } from '../../context';
 import { auth } from '../../firebase/firebaseConfig';
 import useHomePage from '../../hooks/use-home-page.hook';
 import CreateButton from '../CreateButton/CreateButton';
+import { HeaderLeftWrapper } from '../HeaderLeft/HeaderLeftWrapper';
+import { HeaderRightWrapper } from '../HeaderRight/HeaderRightWrapper';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import SearchTodoInput from '../SearchTodoInput/SearchTodoInput';
 import { HeaderWrapper } from './HeaderStyled';
@@ -35,9 +37,13 @@ function Header() {
 
   return (
     <HeaderWrapper>
-      <SearchTodoInput searchInputChangeHandler={searchInputChangeHandler} />
-      <CreateButton createButtonHandler={createButtonHandler} />
-      <LogoutButton logOutHandler={logOutHandler} />
+      <HeaderLeftWrapper>
+        <SearchTodoInput searchInputChangeHandler={searchInputChangeHandler} />
+      </HeaderLeftWrapper>
+      <HeaderRightWrapper>
+        <CreateButton createButtonHandler={createButtonHandler} />
+        <LogoutButton logOutHandler={logOutHandler} />
+      </HeaderRightWrapper>
     </HeaderWrapper>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useForm } from '../context';
 
 interface ICloseSVG {
   closeButtonHandlerByCreateTodo?: () => void;
@@ -19,9 +20,12 @@ const CloseSVG: React.FC<ICloseSVG> = ({
   isCreateProject,
   isVisible
 }) => {
+  const { setIsMissProject } = useForm();
+
   const closeSvgHandler = () => {
     if (createTodo) {
       closeButtonHandlerByCreateTodo!();
+      setIsMissProject(false);
     } else if (isVisible) {
       closeButtonHandlerByIsVisible!();
     } else if (isCreateProject) {

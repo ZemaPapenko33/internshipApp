@@ -1,9 +1,13 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
+import { RootState } from '../store';
 import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
+import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
 import LineSidebar from './LineSidebar/LineSidebar';
+import NameProjectInput from './NameProjectInput/NameProjectInput';
 import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
 import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
@@ -45,7 +49,18 @@ const Popup: React.FC<IPopup> = ({
   selectValue,
   selectedTodo
 }) => {
-  const { setIsVisible, isVisible, setTodoId, idActiveProject, setIsCreateProject } = useForm();
+  const {
+    setIsVisible,
+    isVisible,
+    setTodoId,
+    idActiveProject,
+    isMissProject,
+    setIsMissProject,
+    nameProjectInputHandler,
+    setIdActiveProject
+  } = useForm();
+
+  const projects = useSelector((state: RootState) => state.projectSlice.projects);
 
   const closeButtonHandlerByIsVisible = () => {
     setIsVisible(false);
@@ -56,6 +71,10 @@ const Popup: React.FC<IPopup> = ({
     if (setCreateTodo) {
       setCreateTodo(false);
     }
+  };
+
+  const onChangeProjectSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setIdActiveProject(event.target.value);
   };
 
   return (
@@ -88,14 +107,35 @@ const Popup: React.FC<IPopup> = ({
               submitButtonHandler={submitButtonHandler}
             />
           )}
+          {!idActiveProject && (
+            <>
+              <label htmlFor="projectSelect">Project:</label>
+              <select className="border-2" id="projectSelect" onChange={onChangeProjectSelect}>
+                <option value="none">None</option>
+                {projects.map((project, index) => {
+                  return (
+                    <option key={index} value={project.id}>
+                      {project.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </>
+          )}
         </FormTodoAndProjectWrapper>
         {!idActiveProject && (
           <>
             <LineSidebar />
-            <CreateProjectButton setIsCreateProject={setIsCreateProject}>
+            <CreateProjectButton setIsMissProject={setIsMissProject}>
               Create project
             </CreateProjectButton>
           </>
+        )}
+        {isMissProject && !idActiveProject && (
+          <div className="w-full flex flex-col items-start justify-start">
+            <NameProjectInput nameProjectInputHandler={nameProjectInputHandler} />
+            <GreenButtonsWrapper>Add</GreenButtonsWrapper>
+          </div>
         )}
       </PopupWrapper>
     </PopupBackgroundWrapper>
