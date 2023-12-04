@@ -6,6 +6,7 @@ interface ITodoPayload {
   description: string;
   importance: string;
   id: string;
+  idProject: string;
 }
 
 interface ITodoState {

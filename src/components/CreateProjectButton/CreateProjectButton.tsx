@@ -3,14 +3,17 @@ import { CreateProjectButtonWrapper } from './CreateProjectButtonStyled';
 
 interface ICreateProjectButton {
   children: React.ReactNode;
-  setIsMissProject: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsCreateProject: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const CreateProjectButton: React.FC<ICreateProjectButton> = ({ children, setIsMissProject }) => {
-  const clickHandler = () => {
-    setIsMissProject(true);
+const CreateProjectButton: React.FC<ICreateProjectButton> = ({ children, setIsCreateProject }) => {
+  const onClickHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setIsCreateProject(true);
   };
-  return <CreateProjectButtonWrapper onClick={clickHandler}>{children}</CreateProjectButtonWrapper>;
+  return (
+    <CreateProjectButtonWrapper onClick={onClickHandler}>{children}</CreateProjectButtonWrapper>
+  );
 };
 
 export default CreateProjectButton;

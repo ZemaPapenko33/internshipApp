@@ -5,6 +5,7 @@ import {
   doc,
   getDocs,
   query,
+  setDoc,
   updateDoc,
   where
 } from 'firebase/firestore';
@@ -17,6 +18,7 @@ import { RootState } from '../store';
 import { selectTodoById } from '../store/selectors/selectors';
 import { addProject, setProject } from '../store/slices/projectSlice';
 import { addTodo, setTodo, updateStatusById } from '../store/slices/todoSlice';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IHomePageHook {
   idTarget: string;
@@ -134,35 +136,14 @@ function useHomePage(): IHomePageHook {
         description: Description,
         importance: Importance,
         status: Status,
-        id: docs.id
+        id: docs.id,
+        idProject: idActiveProject
       };
       dispatch(addTodo(todo));
     });
     setIsLoading(false);
     setIsVisible(false);
   };
-
-  const submitButtonHandler = async (event: React.MouseEvent) => {
-    event.preventDefault();
-    if (textareaValue && titleValue) {
-      await addDoc(collection(db, 'todo'), {
-        Title: `${titleValue}`,
-        Description: `${textareaValue}`,
-        Importance: `${selectValue}`,
-        Email: `${email?.toLocaleLowerCase()}`,
-        Status: 'TO DO',
-        ProjectId: idActiveProject
-      });
-      getDataHandler();
-      setIsLoading(true);
-      if (setCreateTodo) {
-        setCreateTodo(false);
-      }
-    } else {
-      alert('Пожалуйста, заполните все поля');
-    }
-  };
-
   const getProjectData = async () => {
     dispatch(setProject([]));
     const projectRef = collection(db, 'projects');
@@ -180,6 +161,48 @@ function useHomePage(): IHomePageHook {
       dispatch(addProject(project));
     });
     setIsLoading(false);
+  };
+
+  const submitButtonHandler = async (event: React.MouseEvent) => {
+    event.preventDefault();
+    if (textareaValue && titleValue && !idActiveProject) {
+      const newId = uuidv4();
+      setIdActiveProject(newId);
+      await setDoc(doc(db, 'projects', newId), {
+        name: nameProject,
+        email: email
+      });
+      await addDoc(collection(db, 'todo'), {
+        Title: `${titleValue}`,
+        Description: `${textareaValue}`,
+        Importance: `${selectValue}`,
+        Email: `${email?.toLocaleLowerCase()}`,
+        Status: 'TO DO',
+        ProjectId: newId
+      });
+      getProjectData();
+      getDataHandler();
+      setIsLoading(true);
+      if (setCreateTodo) {
+        setCreateTodo(false);
+      }
+    } else if (textareaValue && titleValue) {
+      await addDoc(collection(db, 'todo'), {
+        Title: `${titleValue}`,
+        Description: `${textareaValue}`,
+        Importance: `${selectValue}`,
+        Email: `${email?.toLocaleLowerCase()}`,
+        Status: 'TO DO',
+        ProjectId: idActiveProject
+      });
+      getDataHandler();
+      setIsLoading(true);
+      if (setCreateTodo) {
+        setCreateTodo(false);
+      }
+    } else {
+      alert('Пожалуйста, заполните все поля');
+    }
   };
 
   const updateButtonHandler = async (event: React.MouseEvent) => {

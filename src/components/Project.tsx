@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import SettingSVG from '../assets/SettingSVG';
 import ButtonSettings from './ButtonSettings/ButtonSettings';
 import ProjectBlock from './ProjectBlock/ProjectBlock';
@@ -16,11 +17,14 @@ interface IProject {
 }
 
 const Project: React.FC<IProject> = ({ setIdActiveProject, item, setIsSetting }) => {
+  const history = useNavigate();
+
   const settingButtonHandler = () => {
     setIsSetting(true);
   };
   const setIdActiveProjectHandler = () => {
     setIdActiveProject(`${item.id}`);
+    history(`/project/${item.id}`);
   };
 
   return (

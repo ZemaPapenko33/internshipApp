@@ -65,6 +65,7 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
     });
     await deleteDoc(doc(db, 'projects', idActiveProject));
     setIsSetting(false);
+    setIdActiveProject('');
     getProjectData!();
   };
 

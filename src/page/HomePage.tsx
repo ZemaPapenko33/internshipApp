@@ -1,48 +1,17 @@
 import React, { useEffect } from 'react';
-import useHomePage from '../hooks/use-home-page.hook';
-import { useNavigate } from 'react-router-dom';
-import Loader from '../components/LoaderConfig/Loader';
 import { useSelector } from 'react-redux';
-import Popup from '../components/Popup';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context';
-import { selectTodoById } from '../store/selectors/selectors';
+import useHomePage from '../hooks/use-home-page.hook';
 import { RootState } from '../store';
-import Sidebar from '../components/Sidebar';
-import PopupCreateProject from '../components/PopupCreateProject';
-import Content from '../components/Content';
-import Header from '../components/Header/Header';
 
 function HomePage(): JSX.Element {
-  const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
-  const {
-    dragStartHandler,
-    dragEndHandler,
-    dragOverHandler,
-    dragEnterHandler,
-    dragLeaveHandler,
-    dragDropHandler,
-    createTodo,
-    setCreateTodo,
-    selectValue,
-    titleInputChangeHandler,
-    textareaChangeHandler,
-    selectChangeHandler,
-    isLoading,
-    setTextareaValue,
-    setTitleValue,
-    setSelectValue,
-    submitButtonHandler,
-    getDataHandler,
-    getProjectData,
-    updateButtonHandler,
-    deleteButtonHandler
-  } = useHomePage();
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
-  const { isVisible, todoId, isCreateProject, idActiveProject, isSetting } = useForm();
-  const selectedTodo = useSelector((state: RootState) =>
-    todoId ? selectTodoById(todoId)(state) : null
-  );
+  const { getProjectData } = useHomePage();
+  const { setIdActiveProject } = useForm();
+  const projects = useSelector((state: RootState) => state.projectSlice.projects);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
@@ -54,69 +23,24 @@ function HomePage(): JSX.Element {
     getProjectData();
   }, []);
 
-  useEffect(() => {
-    getDataHandler();
-  }, [idActiveProject]);
-
-  useEffect(() => {
-    if (setTextareaValue) {
-      setTextareaValue('');
-    }
-    if (setTitleValue) {
-      setTitleValue('');
-    }
-    if (setSelectValue && selectedTodo) {
-      setSelectValue(selectedTodo.importance);
-    } else {
-      setSelectValue!('Low');
-    }
-  }, [createTodo, isVisible]);
-
   return (
     <div className="overscroll-x-none overflow-x-hidden">
-      <Header />
-      <div className="flex py-2  items-center  overflow-hidden w-screen h-screen relative ">
-        <Sidebar />
-        {isLoading ? (
-          <Loader />
-        ) : idActiveProject ? (
-          <Content
-            blocks={blocks}
-            dragDropHandler={dragDropHandler}
-            dragEndHandler={dragEndHandler}
-            dragStartHandler={dragStartHandler}
-            dragOverHandler={dragOverHandler}
-            dragEnterHandler={dragEnterHandler}
-            dragLeaveHandler={dragLeaveHandler}
-          />
-        ) : (
-          <div></div>
-        )}
-
-        {createTodo && (
-          <Popup
-            titleInputChangeHandler={titleInputChangeHandler}
-            textareaChangeHandler={textareaChangeHandler}
-            selectChangeHandler={selectChangeHandler}
-            setCreateTodo={setCreateTodo}
-            createTodo={createTodo}
-            selectValue={selectValue}
-            submitButtonHandler={submitButtonHandler}
-          />
-        )}
-        {isVisible && (
-          <Popup
-            titleInputChangeHandler={titleInputChangeHandler}
-            textareaChangeHandler={textareaChangeHandler}
-            selectChangeHandler={selectChangeHandler}
-            selectValue={selectValue}
-            deleteButtonHandler={deleteButtonHandler}
-            updateButtonHandler={updateButtonHandler}
-            selectedTodo={selectedTodo}
-          />
-        )}
-        {isCreateProject && <PopupCreateProject getProjectData={getProjectData} />}
-        {isSetting && <PopupCreateProject getProjectData={getProjectData} />}
+      <div className="flex py-2  flex-col items-center  overflow-hidden w-screen h-screen relative ">
+        <h1>Your Projects:</h1>
+        {projects.map((item, index) => {
+          return (
+            <div
+              key={index}
+              className="w-[20%] h-10 bg-slate-200 mb-2 rounded items-center justify-center flex hover:bg-slate-400"
+              onClick={() => {
+                setIdActiveProject(item.id);
+                navigate(`/project/${item.id}`);
+              }}
+            >
+              {item.name}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

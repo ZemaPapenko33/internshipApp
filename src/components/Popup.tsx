@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
@@ -6,7 +6,6 @@ import { RootState } from '../store';
 import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
 import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
-import LineSidebar from './LineSidebar/LineSidebar';
 import NameProjectInput from './NameProjectInput/NameProjectInput';
 import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
@@ -54,13 +53,15 @@ const Popup: React.FC<IPopup> = ({
     isVisible,
     setTodoId,
     idActiveProject,
-    isMissProject,
-    setIsMissProject,
+    setIdActiveProject,
     nameProjectInputHandler,
-    setIdActiveProject
+    nameProject
   } = useForm();
-
+  const [isCreateProject, setIsCreateProject] = useState<boolean>(false);
   const projects = useSelector((state: RootState) => state.projectSlice.projects);
+  const [projectsCreate, setProjectsCreate] = useState(projects);
+  const [isPlusButtonClicked, setIsPlusButtonClicked] = useState<boolean>(false);
+  const [selectedProject, setSelectedProject] = useState<string>('');
 
   const closeButtonHandlerByIsVisible = () => {
     setIsVisible(false);
@@ -74,7 +75,20 @@ const Popup: React.FC<IPopup> = ({
   };
 
   const onChangeProjectSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectedProject(event.target.value);
     setIdActiveProject(event.target.value);
+  };
+
+  const addProjectHandler = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const newProject = {
+      id: `${Math.random()}`,
+      name: nameProject
+    };
+    setProjectsCreate([...projectsCreate, newProject]);
+    setIsCreateProject(false);
+    setSelectedProject(newProject.id);
+    setIsPlusButtonClicked(true);
   };
 
   return (
@@ -98,7 +112,7 @@ const Popup: React.FC<IPopup> = ({
             textareaChangeHandler={textareaChangeHandler!}
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
-          {idActiveProject && (
+          {(selectedProject || idActiveProject) && (
             <TodoButtons
               isVisible={isVisible}
               createTodo={createTodo!}
@@ -110,9 +124,16 @@ const Popup: React.FC<IPopup> = ({
           {!idActiveProject && (
             <>
               <label htmlFor="projectSelect">Project:</label>
-              <select className="border-2" id="projectSelect" onChange={onChangeProjectSelect}>
+              <select className="border-2 mb-2" id="projectSelect" onChange={onChangeProjectSelect}>
                 <option value="none">None</option>
-                {projects.map((project, index) => {
+                {projectsCreate.map((project, index) => {
+                  if (nameProject === project.name) {
+                    return (
+                      <option key={index} value={project.id} selected>
+                        {project.name}
+                      </option>
+                    );
+                  }
                   return (
                     <option key={index} value={project.id}>
                       {project.name}
@@ -122,21 +143,18 @@ const Popup: React.FC<IPopup> = ({
               </select>
             </>
           )}
+          {!idActiveProject && !isPlusButtonClicked && (
+            <>
+              <CreateProjectButton setIsCreateProject={setIsCreateProject}>+</CreateProjectButton>
+            </>
+          )}
+          {isCreateProject && (
+            <div className="w-full flex flex-col items-start justify-start">
+              <NameProjectInput nameProjectInputHandler={nameProjectInputHandler} />
+              <GreenButtonsWrapper onClick={addProjectHandler}>Add</GreenButtonsWrapper>
+            </div>
+          )}
         </FormTodoAndProjectWrapper>
-        {!idActiveProject && (
-          <>
-            <LineSidebar />
-            <CreateProjectButton setIsMissProject={setIsMissProject}>
-              Create project
-            </CreateProjectButton>
-          </>
-        )}
-        {isMissProject && !idActiveProject && (
-          <div className="w-full flex flex-col items-start justify-start">
-            <NameProjectInput nameProjectInputHandler={nameProjectInputHandler} />
-            <GreenButtonsWrapper>Add</GreenButtonsWrapper>
-          </div>
-        )}
       </PopupWrapper>
     </PopupBackgroundWrapper>
   );
