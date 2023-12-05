@@ -7,5 +7,5 @@ export const FormTodoAndProjectWrapper = styled.form`
   justify-content: center;
   padding: 1rem;
   width: 350px;
-  height: 350px;
+  min-height: 350px;
 `;

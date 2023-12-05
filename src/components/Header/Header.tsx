@@ -5,11 +5,12 @@ import { useForm } from '../../context';
 import { auth } from '../../firebase/firebaseConfig';
 import useHomePage from '../../hooks/use-home-page.hook';
 import CreateButton from '../CreateButton/CreateButton';
-import { HeaderLeftWrapper } from '../HeaderLeft/HeaderLeftWrapper';
+import { HeaderLeftWrapper, HomeIcon } from '../HeaderLeft/HeaderLeftWrapper';
 import { HeaderRightWrapper } from '../HeaderRight/HeaderRightWrapper';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import SearchTodoInput from '../SearchTodoInput/SearchTodoInput';
 import { HeaderWrapper } from './HeaderStyled';
+import { faHouse } from '@fortawesome/free-solid-svg-icons';
 
 function Header() {
   const { setCreateTodo } = useHomePage();
@@ -35,9 +36,14 @@ function Header() {
     setSearchTodo(event.target.value);
   };
 
+  const HomeIconClick = () => {
+    navigateToLoginPage('/');
+  };
+
   return (
     <HeaderWrapper>
       <HeaderLeftWrapper>
+        <HomeIcon icon={faHouse} onClick={HomeIconClick} />
         <SearchTodoInput searchInputChangeHandler={searchInputChangeHandler} />
       </HeaderLeftWrapper>
       <HeaderRightWrapper>

@@ -18,3 +18,9 @@ export const selectTodoById = (id: string) =>
 
 export const selectProjectByName = (name: string) =>
   createSelector([selectProjects], (projects) => projects.find((project) => project.name === name));
+
+export const selectProjectCountById = (projectId: string) =>
+  createSelector(selectProjects, (projects) => {
+    const project = projects.find((p) => p.id === projectId);
+    return project ? project.count : 0;
+  });

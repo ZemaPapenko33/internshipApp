@@ -41,7 +41,8 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
     if (nameProject) {
       await addDoc(collection(db, 'projects'), {
         name: nameProject,
-        email: `${email?.toLocaleLowerCase()}`
+        email: `${email?.toLocaleLowerCase()}`,
+        Count: 0
       });
       setIsCreateProject(false);
       getProjectData!();

@@ -4,6 +4,7 @@ import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
 import { RootState } from '../store';
 import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
+// import { DeleteIcon } from './deleteLabels/DeleteLabels';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
 import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
 import NameProjectInput from './NameProjectInput/NameProjectInput';
@@ -11,9 +12,11 @@ import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
 import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
 import SelectTodo from './SelectTodo/SelectTodo';
+import TextAreaLabels from './TextareaForLabels/TextAreaLabels';
 import TextareaTodo from './TextareaTodo/TextareaTodo';
 import TitleTodoInput from './TitleTodoInput/TitleTodoInput';
 import TodoButtons from './TodoButtons';
+// import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface ITodoPayload {
   status: string;
@@ -55,13 +58,20 @@ const Popup: React.FC<IPopup> = ({
     idActiveProject,
     setIdActiveProject,
     nameProjectInputHandler,
-    nameProject
+    nameProject,
+    setSearchLabel,
+    searchLabel
   } = useForm();
   const [isCreateProject, setIsCreateProject] = useState<boolean>(false);
   const projects = useSelector((state: RootState) => state.projectSlice.projects);
+  const labels = useSelector((state: RootState) => state.labelsSlice.labels);
   const [projectsCreate, setProjectsCreate] = useState(projects);
   const [isPlusButtonClicked, setIsPlusButtonClicked] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<string>('');
+  const [isLabelsClick, setIsLabelsClick] = useState<boolean>(false);
+  const labelsFiltered = searchLabel.length
+    ? labels.filter((label) => label.labelName.toLowerCase().includes(searchLabel.toLowerCase()))
+    : labels;
 
   const closeButtonHandlerByIsVisible = () => {
     setIsVisible(false);
@@ -83,12 +93,22 @@ const Popup: React.FC<IPopup> = ({
     event.preventDefault();
     const newProject = {
       id: `${Math.random()}`,
-      name: nameProject
+      name: nameProject,
+      count: 0
     };
     setProjectsCreate([...projectsCreate, newProject]);
     setIsCreateProject(false);
     setSelectedProject(newProject.id);
     setIsPlusButtonClicked(true);
+  };
+
+  const onClickInLabels = () => {
+    setIsLabelsClick(true);
+    setSearchLabel('');
+  };
+
+  const onChangeLabels = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setSearchLabel(event.target.value);
   };
 
   return (
@@ -112,6 +132,21 @@ const Popup: React.FC<IPopup> = ({
             textareaChangeHandler={textareaChangeHandler!}
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
+          <TextAreaLabels onClickInLabels={onClickInLabels} onChangeLabels={onChangeLabels} />
+          {isLabelsClick && (
+            <div className="w-[255px] h-[150px] mb-2 flex flex-wrap  px-4 py-2   overflow-y-auto ">
+              {labelsFiltered.map((item, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="w-content px-2 text-center h-[25px] bg-slate-300 mr-2 mb-2 rounded hover:bg-slate-400 "
+                  >
+                    {item.labelName}
+                  </div>
+                );
+              })}
+            </div>
+          )}
           {(selectedProject || idActiveProject) && (
             <TodoButtons
               isVisible={isVisible}

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context';
+
 import useHomePage from '../hooks/use-home-page.hook';
 import { RootState } from '../store';
 
@@ -31,13 +32,14 @@ function HomePage(): JSX.Element {
           return (
             <div
               key={index}
-              className="w-[20%] h-10 bg-slate-200 mb-2 rounded items-center justify-center flex hover:bg-slate-400"
+              className="w-[20%] h-15 bg-slate-200 mb-2 rounded items-center justify-center flex flex-col hover:bg-slate-400"
               onClick={() => {
                 setIdActiveProject(item.id);
                 navigate(`/project/${item.id}`);
               }}
             >
-              {item.name}
+              <div>Name project: {item.name}</div>
+              <div>Tasks count: {item.count}</div>
             </div>
           );
         })}

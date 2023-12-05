@@ -15,10 +15,11 @@ import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
 import { EnumImportance } from '../shared/enum';
 import { RootState } from '../store';
-import { selectTodoById } from '../store/selectors/selectors';
+import { selectProjectCountById, selectTodoById } from '../store/selectors/selectors';
 import { addProject, setProject } from '../store/slices/projectSlice';
 import { addTodo, setTodo, updateStatusById } from '../store/slices/todoSlice';
 import { v4 as uuidv4 } from 'uuid';
+import { addLabel, setLabels } from '../store/slices/labelsSlice';
 
 interface IHomePageHook {
   idTarget: string;
@@ -67,6 +68,7 @@ function useHomePage(): IHomePageHook {
   const dispatch = useDispatch();
   const email = localStorage.getItem('email');
   const selectedTodo = useSelector((state: RootState) => selectTodoById(todoId)(state));
+  let projectCount = useSelector(selectProjectCountById(idActiveProject));
 
   const dragStartHandler = (event: React.DragEvent<HTMLDivElement>) => {
     setTimeout(() => {
@@ -120,6 +122,21 @@ function useHomePage(): IHomePageHook {
     setSelectValue(event.target.value);
   };
 
+  const getLabelsData = async () => {
+    dispatch(setLabels([]));
+    const labelsRef = collection(db, 'labels');
+    const Snapshot = await getDocs(labelsRef);
+    Snapshot.forEach((docs) => {
+      const { NameLabel } = docs.data();
+
+      const label = {
+        labelName: NameLabel,
+        idLabel: docs.id
+      };
+      dispatch(addLabel(label));
+    });
+  };
+
   const getDataHandler = async () => {
     dispatch(setTodo([]));
     const todoRef = collection(db, 'todo');
@@ -141,6 +158,7 @@ function useHomePage(): IHomePageHook {
       };
       dispatch(addTodo(todo));
     });
+    getLabelsData();
     setIsLoading(false);
     setIsVisible(false);
   };
@@ -150,13 +168,14 @@ function useHomePage(): IHomePageHook {
     const q = query(projectRef, where('email', '==', `${email?.toLocaleLowerCase()}`));
     const Snapshot = await getDocs(q);
     Snapshot.forEach((docs) => {
-      const { name } = docs.data();
+      const { name, Count } = docs.data();
       if (!idActiveProject && name === nameProject) {
         setIdActiveProject(`${docs.id}`);
       }
       const project = {
         name: name,
-        id: docs.id
+        id: docs.id,
+        count: Count
       };
       dispatch(addProject(project));
     });
@@ -180,6 +199,10 @@ function useHomePage(): IHomePageHook {
         Status: 'TO DO',
         ProjectId: newId
       });
+      const updateProjectRef = doc(db, 'projects', newId);
+      await updateDoc(updateProjectRef, {
+        Count: ++projectCount
+      });
       getProjectData();
       getDataHandler();
       setIsLoading(true);
@@ -194,6 +217,10 @@ function useHomePage(): IHomePageHook {
         Email: `${email?.toLocaleLowerCase()}`,
         Status: 'TO DO',
         ProjectId: idActiveProject
+      });
+      const updateProjectRef = doc(db, 'projects', idActiveProject);
+      await updateDoc(updateProjectRef, {
+        Count: ++projectCount
       });
       getDataHandler();
       setIsLoading(true);
@@ -221,6 +248,10 @@ function useHomePage(): IHomePageHook {
   const deleteButtonHandler = async (event: React.MouseEvent) => {
     event.preventDefault();
     await deleteDoc(doc(db, 'todo', todoId));
+    const updateProjectRef = doc(db, 'projects', idActiveProject);
+    await updateDoc(updateProjectRef, {
+      Count: --projectCount
+    });
     setIsLoading(true);
     getDataHandler();
   };
