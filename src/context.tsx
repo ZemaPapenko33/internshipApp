@@ -1,5 +1,10 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
+interface ISelectedLabels {
+  name: string;
+  id: string;
+}
+
 interface IFormContext {
   createTodo: boolean;
   email: string;
@@ -15,6 +20,7 @@ interface IFormContext {
   idActiveProject: string;
   isSetting: boolean;
   searchLabel: string;
+  selectedLabels: ISelectedLabels[];
   setCreateTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
@@ -31,6 +37,7 @@ interface IFormContext {
   setIdActiveProject: React.Dispatch<React.SetStateAction<string>>;
   setIsSetting: React.Dispatch<React.SetStateAction<boolean>>;
   setSearchLabel: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedLabels: React.Dispatch<React.SetStateAction<ISelectedLabels[]>>;
 }
 
 interface FormProviderProps {
@@ -54,6 +61,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [idActiveProject, setIdActiveProject] = useState<string>('');
   const [isSetting, setIsSetting] = useState<boolean>(false);
   const [searchLabel, setSearchLabel] = useState<string>('');
+  const [selectedLabels, setSelectedLabels] = useState<ISelectedLabels[]>([]);
 
   const nameProjectInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNameProject(event.target.value);
@@ -102,7 +110,9 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
         isSetting,
         setIsSetting,
         setSearchLabel,
-        searchLabel
+        searchLabel,
+        selectedLabels,
+        setSelectedLabels
       }}
     >
       {children}

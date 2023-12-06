@@ -6,4 +6,7 @@ export const NameProjectInputWrapper = styled.input`
   border-bottom-width: 2px;
   height: 30px;
   padding: 0.5rem;
+  &:focus {
+    outline: none;
+  }
 `;

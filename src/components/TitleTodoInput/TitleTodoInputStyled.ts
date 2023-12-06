@@ -6,4 +6,8 @@ export const TitleTodoInputWrapper = styled.input`
   border-radius: 0.25rem;
   padding: 0.5rem;
   margin-bottom: 0.5rem;
+
+  &:focus {
+    outline: none;
+  }
 `;

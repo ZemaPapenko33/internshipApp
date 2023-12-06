@@ -27,7 +27,7 @@ const TextareaTodo: React.FC<ITextareaTodo> = ({ textareaChangeHandler, selected
   return (
     <TextareaTodoWrapper
       style={{ resize: 'none' }}
-      cols={30}
+      cols={45}
       rows={textareaRows}
       placeholder="Description"
       onChange={textareaChangeHandler}

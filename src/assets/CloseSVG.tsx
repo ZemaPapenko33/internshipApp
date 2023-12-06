@@ -36,11 +36,7 @@ const CloseSVG: React.FC<ICloseSVG> = ({
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0,0,256,256" width="28px" height="28px">
         <g
           fill="#000"
-          fill-rule="nonzero"
           stroke="none"
-          stroke-width="1"
-          stroke-linecap="butt"
-          stroke-linejoin="miter"
           stroke-miterlimit="10"
           stroke-dasharray=""
           stroke-dashoffset="0"

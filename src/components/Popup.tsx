@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
@@ -7,6 +7,7 @@ import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
 // import { DeleteIcon } from './deleteLabels/DeleteLabels';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
 import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
+import { LabelInTextareaWrapper } from './LabelInTextarea/LabelInTextareaStyled';
 import NameProjectInput from './NameProjectInput/NameProjectInput';
 import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
@@ -60,7 +61,8 @@ const Popup: React.FC<IPopup> = ({
     nameProjectInputHandler,
     nameProject,
     setSearchLabel,
-    searchLabel
+    searchLabel,
+    setSelectedLabels
   } = useForm();
   const [isCreateProject, setIsCreateProject] = useState<boolean>(false);
   const projects = useSelector((state: RootState) => state.projectSlice.projects);
@@ -102,14 +104,23 @@ const Popup: React.FC<IPopup> = ({
     setIsPlusButtonClicked(true);
   };
 
-  const onClickInLabels = () => {
+  const onClickInLabelsTextArea = () => {
     setIsLabelsClick(true);
     setSearchLabel('');
   };
 
-  const onChangeLabels = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const onChangeLabels = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLabel(event.target.value);
+    console.log(labelsFiltered);
   };
+
+  const onClickLabels = (item: { name: string; id: string }) => {
+    setSelectedLabels((prevState) => [...prevState, item]);
+  };
+
+  useEffect(() => {
+    setSelectedLabels([]);
+  }, []);
 
   return (
     <PopupBackgroundWrapper>
@@ -132,17 +143,20 @@ const Popup: React.FC<IPopup> = ({
             textareaChangeHandler={textareaChangeHandler!}
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
-          <TextAreaLabels onClickInLabels={onClickInLabels} onChangeLabels={onChangeLabels} />
+          <TextAreaLabels
+            onClickInLabels={onClickInLabelsTextArea}
+            onChangeLabels={onChangeLabels}
+          />
           {isLabelsClick && (
-            <div className="w-[255px] h-[150px] mb-2 flex flex-wrap  px-4 py-2   overflow-y-auto ">
+            <div className="w-[355px] h-[100px] mb-2 flex flex-wrap px-4 py-2 overflow-y-auto ">
               {labelsFiltered.map((item, index) => {
                 return (
-                  <div
+                  <LabelInTextareaWrapper
                     key={index}
-                    className="w-content px-2 text-center h-[25px] bg-slate-300 mr-2 mb-2 rounded hover:bg-slate-400 "
+                    onClick={() => onClickLabels({ name: item.labelName, id: item.idLabel })}
                   >
                     {item.labelName}
-                  </div>
+                  </LabelInTextareaWrapper>
                 );
               })}
             </div>

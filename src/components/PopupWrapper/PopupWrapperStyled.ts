@@ -9,5 +9,5 @@ export const PopupWrapper = styled.div`
   background-color: rgb(255 255 255);
   border-radius: 0.25rem;
   min-height: 350px;
-  width: 350px;
+  width: 450px;
 `;

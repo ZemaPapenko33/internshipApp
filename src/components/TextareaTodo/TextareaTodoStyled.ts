@@ -6,4 +6,7 @@ export const TextareaTodoWrapper = styled.textarea`
   margin-bottom: 0.5rem;
   overflow-wrap: break-word;
   padding: 0.5rem;
+  &:focus {
+    outline: none;
+  }
 `;
