@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from '../../context';
 import { DeleteIcon } from '../deleteLabels/DeleteLabels';
 import { LabelInTextareaWrapper } from '../LabelInTextarea/LabelInTextareaStyled';
-import { TextAreaForLabelsWrapper } from './TextareaForLabelsStyled';
+import { DivForLabelsWrapper } from './DivForLabelsStyled';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface ITextAreaLabels {
@@ -10,7 +10,7 @@ interface ITextAreaLabels {
   onChangeLabels: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-const TextAreaLabels: React.FC<ITextAreaLabels> = ({ onClickInLabels, onChangeLabels }) => {
+const DivLabels: React.FC<ITextAreaLabels> = ({ onClickInLabels, onChangeLabels }) => {
   const { selectedLabels, setSelectedLabels } = useForm();
 
   const deleteIconClickHandler = (id: string) => {
@@ -19,7 +19,7 @@ const TextAreaLabels: React.FC<ITextAreaLabels> = ({ onClickInLabels, onChangeLa
   };
 
   return (
-    <TextAreaForLabelsWrapper onClick={onClickInLabels}>
+    <DivForLabelsWrapper onClick={onClickInLabels}>
       {selectedLabels.map((item, index) => {
         return (
           <LabelInTextareaWrapper key={index} contentEditable={false}>
@@ -31,11 +31,11 @@ const TextAreaLabels: React.FC<ITextAreaLabels> = ({ onClickInLabels, onChangeLa
       <input
         type="text"
         onChange={onChangeLabels}
-        placeholder="Labels..."
+        placeholder={selectedLabels.length ? '' : 'Labels...'}
         className="h-[25px] focus: outline-none"
       />
-    </TextAreaForLabelsWrapper>
+    </DivForLabelsWrapper>
   );
 };
 
-export default TextAreaLabels;
+export default DivLabels;

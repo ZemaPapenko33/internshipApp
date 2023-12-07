@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const TextAreaForLabelsWrapper = styled.div`
+export const DivForLabelsWrapper = styled.div`
   border-bottom-width: 2px;
   border-radius: 0.25rem;
   margin-bottom: 0.5rem;

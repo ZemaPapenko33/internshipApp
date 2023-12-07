@@ -4,7 +4,6 @@ import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
 import { RootState } from '../store';
 import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
-// import { DeleteIcon } from './deleteLabels/DeleteLabels';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
 import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
 import { LabelInTextareaWrapper } from './LabelInTextarea/LabelInTextareaStyled';
@@ -13,11 +12,10 @@ import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
 import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
 import SelectTodo from './SelectTodo/SelectTodo';
-import TextAreaLabels from './TextareaForLabels/TextAreaLabels';
+import DivLabels from './TextareaForLabels/DivLabels';
 import TextareaTodo from './TextareaTodo/TextareaTodo';
 import TitleTodoInput from './TitleTodoInput/TitleTodoInput';
 import TodoButtons from './TodoButtons';
-// import { faXmark } from '@fortawesome/free-solid-svg-icons';
 
 interface ITodoPayload {
   status: string;
@@ -104,14 +102,13 @@ const Popup: React.FC<IPopup> = ({
     setIsPlusButtonClicked(true);
   };
 
-  const onClickInLabelsTextArea = () => {
+  const onClickInLabelsDiv = () => {
     setIsLabelsClick(true);
     setSearchLabel('');
   };
 
   const onChangeLabels = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLabel(event.target.value);
-    console.log(labelsFiltered);
   };
 
   const onClickLabels = (item: { name: string; id: string }) => {
@@ -143,12 +140,9 @@ const Popup: React.FC<IPopup> = ({
             textareaChangeHandler={textareaChangeHandler!}
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
-          <TextAreaLabels
-            onClickInLabels={onClickInLabelsTextArea}
-            onChangeLabels={onChangeLabels}
-          />
+          <DivLabels onClickInLabels={onClickInLabelsDiv} onChangeLabels={onChangeLabels} />
           {isLabelsClick && (
-            <div className="w-[355px] h-[100px] mb-2 flex flex-wrap px-4 py-2 overflow-y-auto ">
+            <div className="w-[355px] h-[100px] mb-2 flex flex-wrap px-2 py-2 overflow-y-auto ">
               {labelsFiltered.map((item, index) => {
                 return (
                   <LabelInTextareaWrapper
