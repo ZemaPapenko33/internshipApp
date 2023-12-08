@@ -55,6 +55,7 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
               dragStartHandler={dragStartHandler}
               dragEndHandler={dragEndHandler}
               key={newItem.id}
+              labels={newItem.Labels}
             />
           );
         })}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
 import { RootState } from '../store';
@@ -16,6 +16,10 @@ import DivLabels from './TextareaForLabels/DivLabels';
 import TextareaTodo from './TextareaTodo/TextareaTodo';
 import TitleTodoInput from './TitleTodoInput/TitleTodoInput';
 import TodoButtons from './TodoButtons';
+import { v4 as uuidv4 } from 'uuid';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '../firebase/firebaseConfig';
+import { addLabel } from '../store/slices/labelsSlice';
 
 interface ITodoPayload {
   status: string;
@@ -23,6 +27,7 @@ interface ITodoPayload {
   description: string;
   importance: string;
   id: string;
+  Labels: string[];
 }
 
 interface IPopup {
@@ -66,6 +71,7 @@ const Popup: React.FC<IPopup> = ({
   const projects = useSelector((state: RootState) => state.projectSlice.projects);
   const labels = useSelector((state: RootState) => state.labelsSlice.labels);
   const [projectsCreate, setProjectsCreate] = useState(projects);
+  const dispatch = useDispatch();
   const [isPlusButtonClicked, setIsPlusButtonClicked] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<string>('');
   const [isLabelsClick, setIsLabelsClick] = useState<boolean>(false);
@@ -109,10 +115,20 @@ const Popup: React.FC<IPopup> = ({
 
   const onChangeLabels = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLabel(event.target.value);
+    console.log(labelsFiltered.length);
   };
 
   const onClickLabels = (item: { name: string; id: string }) => {
     setSelectedLabels((prevState) => [...prevState, item]);
+  };
+
+  const onClickNewLabel = async () => {
+    const newId = uuidv4();
+    await setDoc(doc(db, 'labels', newId), {
+      NameLabel: searchLabel
+    });
+    dispatch(addLabel({ labelName: searchLabel, idLabel: newId }));
+    setSelectedLabels((prevState) => [...prevState, { name: searchLabel, id: newId }]);
   };
 
   useEffect(() => {
@@ -140,19 +156,29 @@ const Popup: React.FC<IPopup> = ({
             textareaChangeHandler={textareaChangeHandler!}
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
-          <DivLabels onClickInLabels={onClickInLabelsDiv} onChangeLabels={onChangeLabels} />
+          <DivLabels
+            onClickInLabels={onClickInLabelsDiv}
+            onChangeLabels={onChangeLabels}
+            selectedTodo={selectedTodo}
+          />
           {isLabelsClick && (
             <div className="w-[355px] h-[100px] mb-2 flex flex-wrap px-2 py-2 overflow-y-auto ">
-              {labelsFiltered.map((item, index) => {
-                return (
-                  <LabelInTextareaWrapper
-                    key={index}
-                    onClick={() => onClickLabels({ name: item.labelName, id: item.idLabel })}
-                  >
-                    {item.labelName}
-                  </LabelInTextareaWrapper>
-                );
-              })}
+              {labelsFiltered.length ? (
+                labelsFiltered.map((item, index) => {
+                  return (
+                    <LabelInTextareaWrapper
+                      key={index}
+                      onClick={() => onClickLabels({ name: item.labelName, id: item.idLabel })}
+                    >
+                      {item.labelName}
+                    </LabelInTextareaWrapper>
+                  );
+                })
+              ) : (
+                <LabelInTextareaWrapper onClick={onClickNewLabel}>
+                  {searchLabel}
+                </LabelInTextareaWrapper>
+              )}
             </div>
           )}
           {(selectedProject || idActiveProject) && (

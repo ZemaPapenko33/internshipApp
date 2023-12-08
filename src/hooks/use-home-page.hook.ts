@@ -59,7 +59,8 @@ function useHomePage(): IHomePageHook {
     setIsVisible,
     todoId,
     nameProject,
-    setIdActiveProject
+    setIdActiveProject,
+    selectedLabels
   } = useForm();
   const [idTarget, setIdTarget] = useState<string>('');
   const [textareaValue, setTextareaValue] = useState<string>('');
@@ -147,14 +148,15 @@ function useHomePage(): IHomePageHook {
     );
     const Snapshot = await getDocs(q);
     Snapshot.forEach((docs) => {
-      const { Title, Description, Importance, Status } = docs.data();
+      const { Title, Description, Importance, Status, Labels } = docs.data();
       const todo = {
         title: Title,
         description: Description,
         importance: Importance,
         status: Status,
         id: docs.id,
-        idProject: idActiveProject
+        idProject: idActiveProject,
+        Labels: Labels
       };
       dispatch(addTodo(todo));
     });
@@ -186,7 +188,6 @@ function useHomePage(): IHomePageHook {
     event.preventDefault();
     if (textareaValue && titleValue && !idActiveProject) {
       const newId = uuidv4();
-      setIdActiveProject(newId);
       await setDoc(doc(db, 'projects', newId), {
         name: nameProject,
         email: email
@@ -197,12 +198,14 @@ function useHomePage(): IHomePageHook {
         Importance: `${selectValue}`,
         Email: `${email?.toLocaleLowerCase()}`,
         Status: 'TO DO',
-        ProjectId: newId
+        ProjectId: newId,
+        Labels: selectedLabels.map((label) => label.id)
       });
       const updateProjectRef = doc(db, 'projects', newId);
       await updateDoc(updateProjectRef, {
         Count: ++projectCount
       });
+      setIdActiveProject(newId);
       getProjectData();
       getDataHandler();
       setIsLoading(true);
@@ -216,7 +219,8 @@ function useHomePage(): IHomePageHook {
         Importance: `${selectValue}`,
         Email: `${email?.toLocaleLowerCase()}`,
         Status: 'TO DO',
-        ProjectId: idActiveProject
+        ProjectId: idActiveProject,
+        Labels: selectedLabels.map((label) => label.id)
       });
       const updateProjectRef = doc(db, 'projects', idActiveProject);
       await updateDoc(updateProjectRef, {
@@ -238,7 +242,8 @@ function useHomePage(): IHomePageHook {
     await updateDoc(updateDocRef, {
       Title: titleValue ? titleValue : selectedTodo?.title,
       Description: textareaValue ? textareaValue : selectedTodo?.description,
-      Importance: selectValue ? selectValue : selectedTodo?.importance
+      Importance: selectValue ? selectValue : selectedTodo?.importance,
+      Labels: [...selectedTodo!.Labels, ...selectedLabels.map((label) => label.id)]
     });
 
     getDataHandler();
