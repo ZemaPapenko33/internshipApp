@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import Header from '../components/Header/Header';
 import { useForm } from '../context';
-
 import useHomePage from '../hooks/use-home-page.hook';
 import { RootState } from '../store';
 
@@ -26,6 +26,7 @@ function HomePage(): JSX.Element {
 
   return (
     <div className="overscroll-x-none overflow-x-hidden">
+      <Header value="Home" />
       <div className="flex py-2  flex-col items-center  overflow-hidden w-screen h-screen relative ">
         <h1>Your Projects:</h1>
         {projects.map((item, index) => {

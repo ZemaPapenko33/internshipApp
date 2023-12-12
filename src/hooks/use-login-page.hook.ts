@@ -50,6 +50,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     signInWithPopup(auth, provider).then((result) => {
       localStorage.setItem('user', JSON.stringify(result.user));
       localStorage.setItem('email', `${result.user.email}`);
+      localStorage.setItem('name', `${result.user.displayName}`);
       navigateToHomePage('/');
     });
   };
@@ -61,6 +62,7 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
     signInWithPopup(auth, provider).then((result) => {
       localStorage.setItem('user', JSON.stringify(result.user));
       localStorage.setItem('email', `${result.user.email}`);
+      localStorage.setItem('name', `${result.user.displayName}`);
       navigateToHomePage('/');
     });
   };

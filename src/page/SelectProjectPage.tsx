@@ -65,7 +65,7 @@ function SelectProjectPage() {
 
   return (
     <div className="overscroll-x-none overflow-x-hidden">
-      <Header />
+      <Header value="Project" />
       <div className="flex py-2  items-center  overflow-hidden w-screen h-screen relative ">
         <Sidebar />
         {isLoading ? (

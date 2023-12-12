@@ -7,6 +7,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { removeLabelById } from '../../store/slices/todoSlice';
+import { InputForSearchLabelWrapper } from '../inputForSearchLabel/InputForSearchLabelStyled';
 
 interface ITodoPayload {
   status: string;
@@ -18,14 +19,16 @@ interface ITodoPayload {
 }
 
 interface ITextAreaLabels {
-  onClickInLabels: () => void;
+  onFocusInLabels: () => void;
+  onBlurInLabels: () => void;
   onChangeLabels: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedTodo?: ITodoPayload | null;
 }
 
 const DivLabels: React.FC<ITextAreaLabels> = ({
-  onClickInLabels,
+  onFocusInLabels,
   onChangeLabels,
+  // onBlurInLabels,
   selectedTodo
 }) => {
   const { selectedLabels, setSelectedLabels } = useForm();
@@ -44,7 +47,7 @@ const DivLabels: React.FC<ITextAreaLabels> = ({
   };
 
   return (
-    <DivForLabelsWrapper onClick={onClickInLabels}>
+    <DivForLabelsWrapper onFocus={onFocusInLabels}>
       {selectedTodoLabels?.map((item, index) => {
         return (
           <LabelInTextareaWrapper key={index} contentEditable={false}>
@@ -61,11 +64,10 @@ const DivLabels: React.FC<ITextAreaLabels> = ({
           </LabelInTextareaWrapper>
         );
       })}
-      <input
+      <InputForSearchLabelWrapper
         type="text"
         onChange={onChangeLabels}
         placeholder={selectedLabels.length ? '' : 'Labels...'}
-        className="h-[25px] focus: outline-none"
       />
     </DivForLabelsWrapper>
   );

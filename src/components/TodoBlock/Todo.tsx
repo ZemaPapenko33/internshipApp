@@ -1,6 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from '../../context';
+import { MAX_LABELS } from '../../shared/consts/labels';
 import { EnumImportance } from '../../shared/enum';
 import { RootState } from '../../store';
 import DescriptionTodo from '../DescriptionTodo/DescriptionTodo';
@@ -20,6 +21,11 @@ interface ITodo {
   dragEndHandler: (event: React.DragEvent<HTMLDivElement>) => void;
 }
 
+interface ILabelsPayload {
+  labelName: string;
+  idLabel: string;
+}
+
 const Todo: React.FC<ITodo> = ({
   index,
   status,
@@ -32,7 +38,12 @@ const Todo: React.FC<ITodo> = ({
 }) => {
   const { setIsVisible, setTodoId } = useForm();
   const allLabels = useSelector((state: RootState) => state.labelsSlice.labels);
-  const filteredLabels = allLabels.filter((label) => labels?.includes(label.idLabel));
+  const filteredLabels = allLabels.reduce((acc, label) => {
+    if (labels?.includes(label.idLabel) && acc.length < MAX_LABELS) {
+      acc.push(label);
+    }
+    return acc;
+  }, [] as ILabelsPayload[]);
 
   const getColor = (importances: string): string => {
     switch (importances) {
@@ -67,9 +78,12 @@ const Todo: React.FC<ITodo> = ({
         {title} <ImportanceCircle color={color} />
       </TitleTodo>
       <DescriptionTodo>{description}</DescriptionTodo>
-      {filteredLabels.map((item, newIndex) => {
-        return <LabelInTextareaWrapper key={newIndex}>{item.labelName}</LabelInTextareaWrapper>;
-      })}
+      <div className="whitespace-nowrap overflow-hidden text-ellipsis flex">
+        {filteredLabels.map((item, newIndex) => {
+          return <LabelInTextareaWrapper key={newIndex}>{item.labelName}</LabelInTextareaWrapper>;
+        })}
+        ...
+      </div>
     </TodoBlockWrapper>
   );
 };

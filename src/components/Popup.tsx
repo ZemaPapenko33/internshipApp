@@ -6,13 +6,12 @@ import { RootState } from '../store';
 import CreateProjectButton from './CreateProjectButton/CreateProjectButton';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
 import { GreenButtonsWrapper } from './GreenButtons/GreenButtons';
-import { LabelInTextareaWrapper } from './LabelInTextarea/LabelInTextareaStyled';
 import NameProjectInput from './NameProjectInput/NameProjectInput';
 import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
 import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
 import SelectTodo from './SelectTodo/SelectTodo';
-import DivLabels from './TextareaForLabels/DivLabels';
+import DivLabels from './DivForLabels/DivLabels';
 import TextareaTodo from './TextareaTodo/TextareaTodo';
 import TitleTodoInput from './TitleTodoInput/TitleTodoInput';
 import TodoButtons from './TodoButtons';
@@ -20,6 +19,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/firebaseConfig';
 import { addLabel } from '../store/slices/labelsSlice';
+import Labels from './Labels/Labels';
+import SelectProject from './SelectProject/SelectProject';
 
 interface ITodoPayload {
   status: string;
@@ -108,9 +109,13 @@ const Popup: React.FC<IPopup> = ({
     setIsPlusButtonClicked(true);
   };
 
-  const onClickInLabelsDiv = () => {
+  const onFocusInLabelsDiv = () => {
     setIsLabelsClick(true);
     setSearchLabel('');
+  };
+
+  const onBlurInLabelsDiv = () => {
+    setIsLabelsClick(false);
   };
 
   const onChangeLabels = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -157,29 +162,17 @@ const Popup: React.FC<IPopup> = ({
           />
           <SelectTodo selectValue={selectValue!} selectChangeHandler={selectChangeHandler!} />
           <DivLabels
-            onClickInLabels={onClickInLabelsDiv}
+            onFocusInLabels={onFocusInLabelsDiv}
             onChangeLabels={onChangeLabels}
+            onBlurInLabels={onBlurInLabelsDiv}
             selectedTodo={selectedTodo}
           />
           {isLabelsClick && (
-            <div className="w-[355px] h-[100px] mb-2 flex flex-wrap px-2 py-2 overflow-y-auto ">
-              {labelsFiltered.length ? (
-                labelsFiltered.map((item, index) => {
-                  return (
-                    <LabelInTextareaWrapper
-                      key={index}
-                      onClick={() => onClickLabels({ name: item.labelName, id: item.idLabel })}
-                    >
-                      {item.labelName}
-                    </LabelInTextareaWrapper>
-                  );
-                })
-              ) : (
-                <LabelInTextareaWrapper onClick={onClickNewLabel}>
-                  {searchLabel}
-                </LabelInTextareaWrapper>
-              )}
-            </div>
+            <Labels
+              onClickLabels={onClickLabels}
+              onClickNewLabel={onClickNewLabel}
+              labelsFiltered={labelsFiltered}
+            />
           )}
           {(selectedProject || idActiveProject) && (
             <TodoButtons
@@ -191,26 +184,10 @@ const Popup: React.FC<IPopup> = ({
             />
           )}
           {!idActiveProject && (
-            <>
-              <label htmlFor="projectSelect">Project:</label>
-              <select className="border-2 mb-2" id="projectSelect" onChange={onChangeProjectSelect}>
-                <option value="none">None</option>
-                {projectsCreate.map((project, index) => {
-                  if (nameProject === project.name) {
-                    return (
-                      <option key={index} value={project.id} selected>
-                        {project.name}
-                      </option>
-                    );
-                  }
-                  return (
-                    <option key={index} value={project.id}>
-                      {project.name}
-                    </option>
-                  );
-                })}
-              </select>
-            </>
+            <SelectProject
+              projectsCreate={projectsCreate}
+              onChangeProjectSelect={onChangeProjectSelect}
+            />
           )}
           {!idActiveProject && !isPlusButtonClicked && (
             <>
