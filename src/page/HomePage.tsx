@@ -5,6 +5,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { DeleteProjectByHomeWrapper } from '../components/DeleteProjectByHome/DeleteProjectByHomeStyled';
 import Header from '../components/Header/Header';
+import { HomePageWrapper } from '../components/HomePageWrapper/HomePageStyled';
+import { HomeProjectWrapper } from '../components/HomeProjectWrapper/HomeProjectStyled';
 import Loader from '../components/LoaderConfig/Loader';
 import PopupCreateProject from '../components/PopupCreateProject';
 import { useForm } from '../context';
@@ -42,13 +44,13 @@ function HomePage(): JSX.Element {
   return (
     <div className="overscroll-x-none overflow-x-hidden bg-slate-100">
       <Header value="Home" />
-      <div className="flex py-2  flex-col items-center  overflow-hidden w-screen h-screen relative ">
+      <HomePageWrapper>
         {isLoading ? (
           <Loader />
         ) : (
           <>
             <h1 className="mb-2 text-2xl">Your Projects:</h1>
-            <div className="flex w-full justify-center flex-wrap ">
+            <HomeProjectWrapper>
               {projects.map((item, index) => {
                 return (
                   <div
@@ -82,10 +84,10 @@ function HomePage(): JSX.Element {
                 <h1 className="text-2xl">+</h1>
               </div>
               {isCreateProject && <PopupCreateProject getProjectData={getProjectData} />}
-            </div>
+            </HomeProjectWrapper>
           </>
         )}
-      </div>
+      </HomePageWrapper>
     </div>
   );
 }
