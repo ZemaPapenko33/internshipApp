@@ -4,7 +4,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../../context';
 import { auth } from '../../firebase/firebaseConfig';
-import useHomePage from '../../hooks/use-home-page.hook';
+import useProjectPage from '../../hooks/use-project-page.hook';
 import CreateButton from '../CreateButton/CreateButton';
 import { HeaderLeftWrapper, HomeIcon } from '../HeaderLeft/HeaderLeftWrapper';
 import { HeaderRightWrapper } from '../HeaderRight/HeaderRightWrapper';
@@ -12,7 +12,7 @@ import LogoutButton from '../LogoutButton/LogoutButton';
 import SearchTodoInput from '../SearchTodoInput/SearchTodoInput';
 
 export const HeaderForProject = () => {
-  const { setCreateTodo } = useHomePage();
+  const { setCreateTodo } = useProjectPage();
   const { setIdActiveProject, setSearchTodo } = useForm();
   const navigateToLoginPage = useNavigate();
   const logOutHandler = (event: React.MouseEvent) => {

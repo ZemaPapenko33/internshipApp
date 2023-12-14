@@ -7,7 +7,7 @@ import Popup from '../components/Popup';
 import PopupCreateProject from '../components/PopupCreateProject';
 import Sidebar from '../components/Sidebar';
 import { useForm } from '../context';
-import useHomePage from '../hooks/use-home-page.hook';
+import useProjectPage from '../hooks/use-project-page.hook';
 import { RootState } from '../store';
 import { selectTodoById } from '../store/selectors/selectors';
 
@@ -34,7 +34,7 @@ function SelectProjectPage() {
     setTextareaValue,
     setTitleValue,
     setSelectValue
-  } = useHomePage();
+  } = useProjectPage();
   const { isVisible, todoId, isCreateProject, idActiveProject, isSetting } = useForm();
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
   const selectedTodo = useSelector((state: RootState) =>
