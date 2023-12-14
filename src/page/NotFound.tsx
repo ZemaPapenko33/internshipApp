@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Error404 from '../assets/img/404E.jpg';
+import { NotFoundWrapper } from '../components/NotFoundWrapper/NotFoundWrapper';
 import { MyRoutes } from '../shared/enum';
 
 const NotFound = () => {
   return (
-    <div className="w-screen h-screen flex flex-col items-center justify-center py-10">
+    <NotFoundWrapper>
       <img src={Error404} alt="Error 404" className="object-cover w-[50%] h-full" />
       <h1 className="text-2xl">
         Page not found
@@ -14,7 +15,7 @@ const NotFound = () => {
           Go home
         </Link>
       </h1>
-    </div>
+    </NotFoundWrapper>
   );
 };
 
