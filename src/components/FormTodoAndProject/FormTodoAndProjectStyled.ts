@@ -6,6 +6,6 @@ export const FormTodoAndProjectWrapper = styled.form`
   align-items: flex-start;
   justify-content: center;
   padding: 1rem;
-  width: 350px;
-  height: 350px;
+  width: 450px;
+  min-height: 350px;
 `;

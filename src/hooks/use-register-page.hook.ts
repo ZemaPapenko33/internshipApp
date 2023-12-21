@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../firebase/firebaseConfig';
 import { PASSWORD_LENGTH_MIN } from '../shared/consts/authorization';
-import { EnumErrors } from '../shared/enum';
+import { EnumErrors, MyRoutes } from '../shared/enum';
 import { useForm } from '../context';
 
 interface IRegisterPageHook {
@@ -37,28 +37,32 @@ function useRegisterPage(): IRegisterPageHook {
     if (password.length < PASSWORD_LENGTH_MIN) {
       setPasswordLength(true);
     } else {
-      createUserWithEmailAndPassword(auth, email, password)
-        .then(() => {
-          setPasswordLength(false);
-          setIsInvalidEmail(false);
-          setIsUseEmail(false);
-          localStorage.setItem('user', email);
-          localStorage.setItem('email', email);
-          navigateToLogIn('/');
-        })
-        .catch((error) => {
-          if (error.code === EnumErrors.EMAIL_ALREADY_IN_USE) {
-            setIsUseEmail(true);
+      try {
+        createUserWithEmailAndPassword(auth, email, password)
+          .then(() => {
+            setPasswordLength(false);
             setIsInvalidEmail(false);
-            setPasswordLength(false);
-          } else if (error.code === EnumErrors.INVALID_EMAIL) {
-            setIsInvalidEmail(true);
             setIsUseEmail(false);
-            setPasswordLength(false);
-          } else {
-            setPasswordLength(false);
-          }
-        });
+            localStorage.setItem('user', email);
+            localStorage.setItem('email', email);
+            navigateToLogIn(MyRoutes.HOME_ROUTE);
+          })
+          .catch((error) => {
+            if (error.code === EnumErrors.EMAIL_ALREADY_IN_USE) {
+              setIsUseEmail(true);
+              setIsInvalidEmail(false);
+              setPasswordLength(false);
+            } else if (error.code === EnumErrors.INVALID_EMAIL) {
+              setIsInvalidEmail(true);
+              setIsUseEmail(false);
+              setPasswordLength(false);
+            } else {
+              setPasswordLength(false);
+            }
+          });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

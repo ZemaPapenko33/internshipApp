@@ -6,6 +6,8 @@ interface ITodoPayload {
   description: string;
   importance: string;
   id: string;
+  idProject: string;
+  Labels: string[];
 }
 
 interface ITodoState {
@@ -42,9 +44,22 @@ const todoSlice = createSlice({
         ...state,
         todos: updatedTodos
       };
+    },
+    removeLabelById: (state, action: PayloadAction<{ id: string; labelId: string }>) => {
+      const { id, labelId } = action.payload;
+      const updatedTodos = state.todos.map((todo) =>
+        todo.id === id
+          ? { ...todo, Labels: todo.Labels.filter((label) => label !== labelId) }
+          : todo
+      );
+
+      return {
+        ...state,
+        todos: updatedTodos
+      };
     }
   }
 });
 
-export const { addTodo, setTodo, updateStatusById } = todoSlice.actions;
+export const { addTodo, setTodo, updateStatusById, removeLabelById } = todoSlice.actions;
 export default todoSlice.reducer;

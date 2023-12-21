@@ -3,6 +3,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 interface IProjectPayload {
   name: string;
   id: string;
+  count: number;
 }
 
 interface IProjectState {

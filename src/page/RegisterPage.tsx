@@ -8,6 +8,7 @@ import RegisterButton from '../components/RegisterButton/RegisterButton';
 import { RegisterAndAuthPageWrapper } from '../components/RegisterPageWrapper/RegisterAndAuthPageWrapper';
 import SubtitleForm from '../components/SubtitleForm/SubtitleForm';
 import useRegisterPage from '../hooks/use-register-page.hook';
+import { MyRoutes } from '../shared/enum';
 
 function RegisterPage(): JSX.Element {
   const {
@@ -23,7 +24,7 @@ function RegisterPage(): JSX.Element {
 
   useEffect(() => {
     if (user) {
-      navigateToHomePage('/');
+      navigateToHomePage(MyRoutes.HOME_ROUTE);
     }
   }, [user]);
 
@@ -34,8 +35,8 @@ function RegisterPage(): JSX.Element {
         {isInvalidEmail && <ErrorMessage>Invalid Email</ErrorMessage>}
         {isUseEmail && (
           <ErrorMessage>
-            Email already in use{' '}
-            <Link to="/login" className="underline decoration-zinc-500 text-zinc-950">
+            Email already in use
+            <Link to={MyRoutes.LOGIN_ROUTE} className="underline decoration-zinc-500 text-zinc-950">
               Login
             </Link>
           </ErrorMessage>
@@ -43,8 +44,8 @@ function RegisterPage(): JSX.Element {
         <PasswordInput passwordInputHandler={passwordInputHandler} />
         {passwordLength && <ErrorMessage>enter a password longer than 8 characters</ErrorMessage>}
         <SubtitleForm>
-          already have an account?{' '}
-          <Link to="/login" className="underline decoration-zinc-500 text-zinc-950">
+          already have an account?
+          <Link to={MyRoutes.LOGIN_ROUTE} className="underline decoration-zinc-500 text-zinc-950">
             Login
           </Link>
         </SubtitleForm>

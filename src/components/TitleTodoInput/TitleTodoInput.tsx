@@ -18,7 +18,6 @@ const TitleTodoInput: React.FC<ITitleTodoInput> = ({ titleInputChangeHandler, se
     <TitleTodoInputWrapper
       type="text"
       placeholder="Title"
-      className="mb-2 shadow-lg rounded border-2 h-[30px] px-2 py-2"
       onChange={titleInputChangeHandler}
       defaultValue={selectedTodo?.title || ''}
     />

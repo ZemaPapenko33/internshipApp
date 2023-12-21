@@ -7,7 +7,7 @@ import {
 import React, { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../firebase/firebaseConfig';
-import { EnumErrors } from '../shared/enum';
+import { EnumErrors, MyRoutes } from '../shared/enum';
 
 interface ILoginPageHook {
   isMissingPassword: boolean;
@@ -44,25 +44,33 @@ function useLoginPage(email: string, password: string): ILoginPageHook {
   const googleButtonHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     const provider = new GoogleAuthProvider();
-
     auth.useDeviceLanguage();
-
-    signInWithPopup(auth, provider).then((result) => {
-      localStorage.setItem('user', JSON.stringify(result.user));
-      localStorage.setItem('email', `${result.user.email}`);
-      navigateToHomePage('/');
-    });
+    try {
+      signInWithPopup(auth, provider).then((result) => {
+        localStorage.setItem('user', JSON.stringify(result.user));
+        localStorage.setItem('email', `${result.user.email}`);
+        localStorage.setItem('name', `${result.user.displayName}`);
+        navigateToHomePage(MyRoutes.HOME_ROUTE);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const githubButtonHandler = (event: React.MouseEvent) => {
     event.preventDefault();
     const provider = new GithubAuthProvider();
     auth.useDeviceLanguage();
-    signInWithPopup(auth, provider).then((result) => {
-      localStorage.setItem('user', JSON.stringify(result.user));
-      localStorage.setItem('email', `${result.user.email}`);
-      navigateToHomePage('/');
-    });
+    try {
+      signInWithPopup(auth, provider).then((result) => {
+        localStorage.setItem('user', JSON.stringify(result.user));
+        localStorage.setItem('email', `${result.user.email}`);
+        localStorage.setItem('name', `${result.user.displayName}`);
+        navigateToHomePage(MyRoutes.HOME_ROUTE);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return {

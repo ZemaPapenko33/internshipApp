@@ -11,6 +11,7 @@ import LoginButton from '../components/LoginButton/LoginButton';
 import GithubButton from '../components/GithubButton/GithubButton';
 import GoogleButton from '../components/GoogleButton/GoogleButton';
 import { RegisterAndAuthPageWrapper } from '../components/RegisterPageWrapper/RegisterAndAuthPageWrapper';
+import { MyRoutes } from '../shared/enum';
 
 function LoginPage(): JSX.Element {
   const { email, password, emailInputHandler, passwordInputHandler } = useForm();
@@ -26,7 +27,7 @@ function LoginPage(): JSX.Element {
 
   useEffect(() => {
     if (user) {
-      navigateToHomePage('/');
+      navigateToHomePage(MyRoutes.HOME_ROUTE);
     }
   }, [user]);
 
@@ -39,7 +40,10 @@ function LoginPage(): JSX.Element {
         {isLoginCredential && <ErrorMessage>login or password entered incorrectly</ErrorMessage>}
         <SubtitleForm>
           don't have an account?{' '}
-          <Link to="/register" className="underline decoration-zinc-500 text-zinc-950">
+          <Link
+            to={MyRoutes.REGISTER_ROUTE}
+            className="underline decoration-zinc-500 text-zinc-950"
+          >
             Register
           </Link>
         </SubtitleForm>

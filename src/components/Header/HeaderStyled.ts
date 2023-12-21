@@ -9,6 +9,5 @@ export const HeaderWrapper = styled.header`
   height: 50px;
   width: 100vw;
   display: flex;
-  justify-content: space-around;
   align-items: center;
 `;
