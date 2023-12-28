@@ -15,7 +15,7 @@ export enum MyRoutes {
   LOGIN_ROUTE = '/login',
   REGISTER_ROUTE = '/register',
   HOME_ROUTE = '/',
-  Ai_ROUTE = '/Ai',
+  Ai_ROUTE = '/ai',
   PROJECT_ROUTE = '/project/:projectId',
   NOTFOUND_ROUTE = '*'
 }

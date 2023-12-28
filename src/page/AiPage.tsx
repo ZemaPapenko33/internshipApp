@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AiPageWrapper } from '../components/AiPageWrapper/AiPageStyled';
 import { AiSidebarWrapper } from '../components/AiSidebar/AiSidebar';
 import TextareaMessageGPT from '../components/InputMessageChatGPT/TextareaMessageGPT';
 import OpenAI from 'openai';
 import { ArrowUpIcon } from '../components/arrowUpIcon/arrowUpIconStyled';
-import { faArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUp, faStop } from '@fortawesome/free-solid-svg-icons';
 import { ChatCompletionMessageParam } from 'openai/resources';
 
 const AiPage = () => {
   const [questionChatGPT, setQuestionChatGPT] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<Array<{ role: string; content: string }>>([]);
+  const [isWaitResponse, setIsWaitResponse] = useState<boolean>(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   const openai = new OpenAI({
     apiKey: process.env.REACT_APP_APIKEY_OPENAI,
@@ -21,6 +27,7 @@ const AiPage = () => {
   };
 
   async function clickTest() {
+    setIsWaitResponse(true);
     setChatHistory((prevState) => [...prevState, { role: 'user', content: questionChatGPT }]);
 
     const myMessages = chatHistory.map((message) => ({
@@ -32,6 +39,7 @@ const AiPage = () => {
       role: 'user',
       content: questionChatGPT
     });
+    setQuestionChatGPT('');
 
     const completion = await openai.chat.completions.create({
       messages: [...myMessages],
@@ -44,7 +52,7 @@ const AiPage = () => {
         { role: 'assistant', content: completion.choices[0].message.content! }
       ]);
     }
-    setQuestionChatGPT('');
+    setIsWaitResponse(false);
   }
 
   const handleKeyPress = (event: React.KeyboardEvent) => {
@@ -53,6 +61,8 @@ const AiPage = () => {
       clickTest();
     }
   };
+
+  useEffect(scrollToBottom, [chatHistory]);
 
   return (
     <AiPageWrapper>
@@ -67,18 +77,23 @@ const AiPage = () => {
                   ? ' self-end bg-blue-300 rounded py-2 px-2 max-w-[45%] '
                   : ' self-start bg-gray-300 rounded py-2 px-2 max-w-[45%]'
               }
+              ref={messagesEndRef}
             >
               {message.content}
             </div>
           ))}
         </div>
         <div className="w-full h-[15%] flex items-center justify-center relative">
-          <TextareaMessageGPT onChangeMessage={onChangeMessage} handleKeyPress={handleKeyPress} />
+          <TextareaMessageGPT
+            onChangeMessage={onChangeMessage}
+            handleKeyPress={handleKeyPress}
+            questionChatGPT={questionChatGPT}
+          />
           <button
-            className="bg-blue-500 text-white absolute right-[190px] top-100 rounded w-[30px] h-[30px]"
+            className="bg-blue-500 absolute right-[190px] top-100 rounded w-[30px] h-[30px]"
             onClick={clickTest}
           >
-            <ArrowUpIcon icon={faArrowUp} />
+            <ArrowUpIcon icon={isWaitResponse ? faStop : faArrowUp} />
           </button>
         </div>
       </div>
