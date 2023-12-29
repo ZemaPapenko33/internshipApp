@@ -27,6 +27,8 @@ const AiPage = () => {
   };
 
   async function clickTest() {
+    if (isWaitResponse) return;
+
     setIsWaitResponse(true);
     setChatHistory((prevState) => [...prevState, { role: 'user', content: questionChatGPT }]);
 

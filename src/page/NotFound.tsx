@@ -11,7 +11,6 @@ const NotFound = () => {
       <h1 className="text-2xl">
         Page not found
         <Link to={MyRoutes.HOME_ROUTE} className="underline decoration-zinc-500  text-blue-500">
-          {' '}
           Go home
         </Link>
       </h1>
