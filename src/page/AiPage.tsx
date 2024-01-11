@@ -6,6 +6,8 @@ import OpenAI from 'openai';
 import { ArrowUpIcon } from '../components/arrowUpIcon/arrowUpIconStyled';
 import { faArrowUp, faStop } from '@fortawesome/free-solid-svg-icons';
 import { ChatCompletionMessageParam } from 'openai/resources';
+import { AiMainWrapper } from '../components/AiMainWrapper/AiMainWrapperStyled';
+import AiChatBlock from '../components/AiChatBlock/AiChatBlock';
 
 const AiPage = () => {
   const [questionChatGPT, setQuestionChatGPT] = useState<string>('');
@@ -69,22 +71,12 @@ const AiPage = () => {
   return (
     <AiPageWrapper>
       <AiSidebarWrapper></AiSidebarWrapper>
-      <div className="h-full w-[80%]">
-        <div className="w-full h-[85%] py-2 px-4 overflow-hidden overflow-y-auto flex flex-col">
-          {chatHistory.map((message, index) => (
-            <div
-              key={index}
-              className={
-                message.role === 'user'
-                  ? ' self-end bg-blue-300 rounded py-2 px-2 max-w-[45%] '
-                  : ' self-start bg-gray-300 rounded py-2 px-2 max-w-[45%]'
-              }
-              ref={messagesEndRef}
-            >
-              {message.content}
-            </div>
-          ))}
-        </div>
+      <AiMainWrapper>
+        <AiChatBlock
+          chatHistory={chatHistory}
+          isWaitResponse={isWaitResponse}
+          messagesEndRef={messagesEndRef}
+        />
         <div className="w-full h-[15%] flex items-center justify-center relative">
           <TextareaMessageGPT
             onChangeMessage={onChangeMessage}
@@ -98,7 +90,7 @@ const AiPage = () => {
             <ArrowUpIcon icon={isWaitResponse ? faStop : faArrowUp} />
           </button>
         </div>
-      </div>
+      </AiMainWrapper>
     </AiPageWrapper>
   );
 };
