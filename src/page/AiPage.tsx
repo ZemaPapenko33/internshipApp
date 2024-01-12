@@ -4,16 +4,26 @@ import { AiSidebarWrapper } from '../components/AiSidebar/AiSidebar';
 import TextareaMessageGPT from '../components/InputMessageChatGPT/TextareaMessageGPT';
 import OpenAI from 'openai';
 import { ArrowUpIcon } from '../components/arrowUpIcon/arrowUpIconStyled';
-import { faArrowUp, faStop } from '@fortawesome/free-solid-svg-icons';
+import { faArrowUp, faStop, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { ChatCompletionMessageParam } from 'openai/resources';
 import { AiMainWrapper } from '../components/AiMainWrapper/AiMainWrapperStyled';
 import AiChatBlock from '../components/AiChatBlock/AiChatBlock';
+import { useNavigate } from 'react-router-dom';
+import { useForm } from '../context';
+import { BackArrow } from '../components/BackArrowIcon/BackArrowIconStyled';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store';
 
 const AiPage = () => {
   const [questionChatGPT, setQuestionChatGPT] = useState<string>('');
   const [chatHistory, setChatHistory] = useState<Array<{ role: string; content: string }>>([]);
   const [isWaitResponse, setIsWaitResponse] = useState<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { idActiveProject } = useForm();
+  const history = useNavigate();
+  const todosProject = useSelector((state: RootState) => state.todoSlice.todos)
+    .filter((todo) => todo.idProject === idActiveProject)
+    .sort((currentTodo, nextTodo) => currentTodo.title.localeCompare(nextTodo.title));
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -66,17 +76,42 @@ const AiPage = () => {
     }
   };
 
+  const backProjectHandler = () => {
+    history(`/project/${idActiveProject}`);
+  };
+
   useEffect(scrollToBottom, [chatHistory]);
 
   return (
     <AiPageWrapper>
-      <AiSidebarWrapper></AiSidebarWrapper>
+      <AiSidebarWrapper>
+        <div
+          onClick={backProjectHandler}
+          className="px-2 py-2 hover:bg-blue-700 rounded mb-4 cursor-pointer "
+        >
+          <BackArrow icon={faArrowLeft} />
+          Back to project
+        </div>
+        {todosProject.map((todo, index) => {
+          return (
+            <div key={index} className="px-2 py-2 hover:bg-blue-700 rounded cursor-pointer">
+              {todo.title}
+            </div>
+          );
+        })}
+      </AiSidebarWrapper>
       <AiMainWrapper>
-        <AiChatBlock
-          chatHistory={chatHistory}
-          isWaitResponse={isWaitResponse}
-          messagesEndRef={messagesEndRef}
-        />
+        {chatHistory.length ? (
+          <AiChatBlock
+            chatHistory={chatHistory}
+            isWaitResponse={isWaitResponse}
+            messagesEndRef={messagesEndRef}
+          />
+        ) : (
+          <div className="w-full h-[85%] flex flex-col items-center justify-center">
+            How i can help you today?
+          </div>
+        )}
         <div className="w-full h-[15%] flex items-center justify-center relative">
           <TextareaMessageGPT
             onChangeMessage={onChangeMessage}

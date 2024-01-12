@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from '../../context';
 import { auth } from '../../firebase/firebaseConfig';
 import useProjectPage from '../../hooks/use-project-page.hook';
+import AssistantButton from '../AssistantButton/AssistantButton';
 import CreateButton from '../CreateButton/CreateButton';
 import { HeaderLeftWrapper, HomeIcon } from '../HeaderLeft/HeaderLeftWrapper';
 import { HeaderRightWrapper } from '../HeaderRight/HeaderRightWrapper';
@@ -13,7 +14,7 @@ import SearchTodoInput from '../SearchTodoInput/SearchTodoInput';
 
 export const HeaderForProject = () => {
   const { setCreateTodo } = useProjectPage();
-  const { setIdActiveProject, setSearchTodo } = useForm();
+  const { setIdActiveProject, setSearchTodo, idActiveProject } = useForm();
   const navigateToLoginPage = useNavigate();
   const logOutHandler = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -39,6 +40,10 @@ export const HeaderForProject = () => {
     navigateToLoginPage('/');
   };
 
+  const assistantHandler = () => {
+    navigateToLoginPage(`/project/${idActiveProject}/assistant`);
+  };
+
   return (
     <>
       <HeaderLeftWrapper>
@@ -46,6 +51,7 @@ export const HeaderForProject = () => {
         <SearchTodoInput searchInputChangeHandler={searchInputChangeHandler} />
       </HeaderLeftWrapper>
       <HeaderRightWrapper>
+        {idActiveProject ? <AssistantButton assistantHandler={assistantHandler} /> : null}
         <CreateButton createButtonHandler={createButtonHandler} />
         <LogoutButton logOutHandler={logOutHandler} />
       </HeaderRightWrapper>
