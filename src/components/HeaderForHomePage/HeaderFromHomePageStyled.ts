@@ -10,5 +10,5 @@ export const HeaderFromHomePageWrapper = styled.header`
   justify-content: space-between;
   padding-left: 0.5rem /* 8px */;
   padding-right: 0.5rem /* 8px */;
-  color: rgb(147 197 253);
+  color: rgb(59 130 246);
 `;

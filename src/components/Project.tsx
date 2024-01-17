@@ -29,7 +29,7 @@ const Project: React.FC<IProject> = ({ setIdActiveProject, item, setIsSetting })
 
   return (
     <div onClick={setIdActiveProjectHandler}>
-      <ProjectBlock>
+      <ProjectBlock projectId={item.id}>
         <ProjectName>{item.name}</ProjectName>
         <ButtonSettings settingButtonHandler={settingButtonHandler}>
           <SettingSVG />

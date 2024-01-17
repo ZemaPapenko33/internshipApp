@@ -4,7 +4,7 @@ export const AssistantButtonWrapper = styled.button`
   border-radius: 0.25rem;
   color: #3b82f6;
   height: 30px;
-  width: 50px;
+  width: 100px;
   display: flex;
   justify-content: space-around;
   align-items: center;

@@ -21,6 +21,8 @@ interface IFormContext {
   isSetting: boolean;
   searchLabel: string;
   selectedLabels: ISelectedLabels[];
+  filterLabels: string;
+  setFilterLabels: React.Dispatch<React.SetStateAction<string>>;
   setCreateTodo: React.Dispatch<React.SetStateAction<boolean>>;
   setEmail: React.Dispatch<React.SetStateAction<string>>;
   setPassword: React.Dispatch<React.SetStateAction<string>>;
@@ -62,6 +64,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
   const [isSetting, setIsSetting] = useState<boolean>(false);
   const [searchLabel, setSearchLabel] = useState<string>('');
   const [selectedLabels, setSelectedLabels] = useState<ISelectedLabels[]>([]);
+  const [filterLabels, setFilterLabels] = useState<string>('');
 
   const nameProjectInputHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNameProject(event.target.value);
@@ -82,6 +85,7 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
     <FormContext.Provider
       value={{
         createTodo,
+        filterLabels,
         email,
         password,
         isInvalidEmail,
@@ -112,7 +116,8 @@ export const FormProvider: React.FC<FormProviderProps> = ({ children }) => {
         setSearchLabel,
         searchLabel,
         selectedLabels,
-        setSelectedLabels
+        setSelectedLabels,
+        setFilterLabels
       }}
     >
       {children}

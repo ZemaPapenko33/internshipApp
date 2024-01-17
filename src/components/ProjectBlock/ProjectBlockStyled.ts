@@ -8,4 +8,5 @@ export const ProjectBlockWrapper = styled.div`
   align-items: center;
   justify-content: center;
   background-color: rgb(241 245 249);
+  cursor: pointer;
 `;

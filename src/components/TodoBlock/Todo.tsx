@@ -82,7 +82,7 @@ const Todo: React.FC<ITodo> = ({
         {filteredLabels.map((item, newIndex) => {
           return <LabelInTextareaWrapper key={newIndex}>{item.labelName}</LabelInTextareaWrapper>;
         })}
-        ...
+        {filteredLabels.length ? '...' : null}
       </div>
     </TodoBlockWrapper>
   );

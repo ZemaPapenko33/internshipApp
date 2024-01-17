@@ -28,7 +28,7 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
   dragStartHandler,
   dragEndHandler
 }) => {
-  const { searchTodo } = useForm();
+  const { searchTodo, filterLabels } = useForm();
   const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
   const filteredTodos = searchTodo.length
     ? filterTodo.filter((todo) => todo.title.toLowerCase().includes(searchTodo.toLowerCase()))

@@ -194,7 +194,7 @@ const Popup: React.FC<IPopup> = ({
               <CreateProjectButton setIsCreateProject={setIsCreateProject}>+</CreateProjectButton>
             </>
           )}
-          {isCreateProject && (
+          {isCreateProject && !idActiveProject && (
             <div className="w-full flex flex-col items-start justify-start">
               <NameProjectInput nameProjectInputHandler={nameProjectInputHandler} />
               <GreenButtonsWrapper onClick={addProjectHandler}>Add</GreenButtonsWrapper>

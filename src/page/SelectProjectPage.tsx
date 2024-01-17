@@ -35,17 +35,23 @@ function SelectProjectPage() {
     setTitleValue,
     setSelectValue
   } = useProjectPage();
-  const { isVisible, todoId, isCreateProject, idActiveProject, isSetting } = useForm();
+  const { isVisible, todoId, isCreateProject, idActiveProject, isSetting, setIdActiveProject } =
+    useForm();
   const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
   const selectedTodo = useSelector((state: RootState) =>
     todoId ? selectTodoById(todoId)(state) : null
   );
 
   useEffect(() => {
+    if (idActiveProject) {
+      localStorage.setItem('projectActiveId', idActiveProject);
+    }
     getDataHandler();
   }, [idActiveProject]);
 
   useEffect(() => {
+    const saveProjectId = localStorage.getItem('projectActiveId')!;
+    setIdActiveProject(saveProjectId);
     getProjectData();
   }, []);
 

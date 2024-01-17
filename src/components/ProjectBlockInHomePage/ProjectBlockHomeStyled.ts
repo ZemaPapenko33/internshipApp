@@ -17,6 +17,8 @@ export const ProjectBlockHomeWrapper = styled.div`
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
+  padding-bottom: 1rem;
+  cursor: pointer;
 
   &:hover {
     box-shadow:

@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 
-export const CreateButtonWrapper = styled.button`
+export const HomeButtonWrapper = styled.button`
   border-radius: 0.25rem;
   color: #3b82f6;
   height: 30px;

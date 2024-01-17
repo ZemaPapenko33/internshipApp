@@ -5,5 +5,9 @@ export const SearchTodoInputWrapper = styled.input`
   height: 30px;
   width: 270px;
   border-radius: 0.25rem;
-  border-width: 2px;
+  border-bottom-width: 2px;
+  margin-right: 0.25rem;
+  &:focus {
+    outline: none;
+  }
 `;

@@ -21,7 +21,7 @@ const AiChatBlock: React.FC<IAiChat> = ({ chatHistory, isWaitResponse, messagesE
           key={index}
           className={
             message.role === 'user'
-              ? ' self-end bg-blue-300 rounded py-2 px-2 max-w-[45%] '
+              ? ' self-end bg-blue-300 rounded py-2 px-2 max-w-[45%] mb-2 '
               : ' self-start bg-gray-300 rounded py-2 px-2 max-w-[45%]'
           }
           ref={messagesEndRef}

@@ -35,6 +35,7 @@ function useHomePage(): IHomePageHook {
   const projectClick = (item: IProjectPayload) => {
     setIdActiveProject(item.id);
     navigate(`/project/${item.id}`);
+    localStorage.setItem('projectActiveId', item.id);
   };
 
   const addProjectClick = () => {
