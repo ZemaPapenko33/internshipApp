@@ -30,9 +30,15 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
 }) => {
   const { searchTodo, filterLabels } = useForm();
   const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
-  const filteredTodos = searchTodo.length
+  let filteredTodos = searchTodo.length
     ? filterTodo.filter((todo) => todo.title.toLowerCase().includes(searchTodo.toLowerCase()))
     : filterTodo;
+
+  if (filterLabels) {
+    filteredTodos = filteredTodos.filter((todo) =>
+      todo.Labels.some((label) => filterLabels.includes(label))
+    );
+  }
 
   return (
     <SectionWrapper>

@@ -58,13 +58,13 @@ export const HeaderForProject = () => {
         <SearchTodoInput searchInputChangeHandler={searchInputChangeHandler} />
         <select
           name="labelsSelect"
-          className="border-b-[2px] h-[30px] rounded px-4"
+          className="border-b-[2px] h-[30px] min-w-[200px] rounded px-4"
           onChange={selectLabelsChange}
         >
           <option value="">All</option>
           {Labels.map((label, index) => {
             return (
-              <option key={index} value={label.labelName}>
+              <option key={index} value={label.idLabel}>
                 {label.labelName}
               </option>
             );
