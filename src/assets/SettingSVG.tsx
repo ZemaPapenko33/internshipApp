@@ -1,3 +1,5 @@
+import React from 'react';
+
 const SettingSVG = () => {
   return (
     <svg
@@ -6,7 +8,6 @@ const SettingSVG = () => {
       width="800px"
       height="800px"
       viewBox="0 0 32 32"
-      enable-background="new 0 0 32 32"
       id="Glyph"
       version="1.1"
       className="w-[20px] h-[20px]"

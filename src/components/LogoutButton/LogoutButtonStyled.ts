@@ -2,8 +2,9 @@ import styled from '@emotion/styled';
 
 export const LogoutButtonWrapper = styled.button`
   border-radius: 0.25rem;
-  background-color: #3b82f6;
+  color: #3b82f6;
   height: 30px;
-  width: 270px;
-  color: white;
+  width: 100px;
+  font-size: 1.5rem /* 24px */;
+  line-height: 2rem /* 32px */;
 `;

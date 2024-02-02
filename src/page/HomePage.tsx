@@ -1,123 +1,75 @@
-import React, { useEffect } from 'react';
-import useHomePage from '../hooks/use-home-page.hook';
-import { useNavigate } from 'react-router-dom';
-import Loader from '../components/LoaderConfig/Loader';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import Popup from '../components/Popup';
-import { useForm } from '../context';
-import { selectTodoById } from '../store/selectors/selectors';
-import { RootState } from '../store';
-import Sidebar from '../components/Sidebar';
-import PopupCreateProject from '../components/PopupCreateProject';
-import Content from '../components/Content';
+import { useNavigate } from 'react-router-dom';
+import { DeleteProjectByHomeWrapper } from '../components/DeleteProjectByHome/DeleteProjectByHomeStyled';
 import Header from '../components/Header/Header';
+import { HomePageWrapper } from '../components/HomePageWrapper/HomePageStyled';
+import { HomeProjectWrapper } from '../components/HomeProjectWrapper/HomeProjectStyled';
+import Loader from '../components/LoaderConfig/Loader';
+import PopupCreateProject from '../components/PopupCreateProject';
+import { ProjectBlockHomeWrapper } from '../components/ProjectBlockInHomePage/ProjectBlockHomeStyled';
+import { useForm } from '../context';
+import useHomePage from '../hooks/use-home-page.hook';
+import useProjectPage from '../hooks/use-project-page.hook';
+import { MyRoutes } from '../shared/enum';
+import { RootState } from '../store';
+import { v4 as uuid4v } from 'uuid';
 
 function HomePage(): JSX.Element {
-  const blocks = ['TO DO', 'IN PROGRESS', 'CODE REVIEW', 'DONE'];
-  const {
-    dragStartHandler,
-    dragEndHandler,
-    dragOverHandler,
-    dragEnterHandler,
-    dragLeaveHandler,
-    dragDropHandler,
-    createTodo,
-    setCreateTodo,
-    selectValue,
-    titleInputChangeHandler,
-    textareaChangeHandler,
-    selectChangeHandler,
-    isLoading,
-    setTextareaValue,
-    setTitleValue,
-    setSelectValue,
-    submitButtonHandler,
-    getDataHandler,
-    getProjectData,
-    updateButtonHandler,
-    deleteButtonHandler
-  } = useHomePage();
   const navigateToLoginPage = useNavigate();
   const user = localStorage.getItem('user');
-  const { isVisible, todoId, isCreateProject, idActiveProject, isSetting } = useForm();
-  const selectedTodo = useSelector((state: RootState) =>
-    todoId ? selectTodoById(todoId)(state) : null
-  );
+  const { getProjectData } = useProjectPage();
+  const { isCreateProject } = useForm();
+  const { isLoading, setIsLoading, projectClick, trashOnClick, addProjectClick } = useHomePage();
+  const projects = useSelector((state: RootState) => state.projectSlice.projects);
 
   useEffect(() => {
     if (!user) {
-      navigateToLoginPage('/login');
+      navigateToLoginPage(MyRoutes.LOGIN_ROUTE);
     }
   }, [user]);
 
   useEffect(() => {
     getProjectData();
+    setIsLoading(false);
   }, []);
 
-  useEffect(() => {
-    getDataHandler();
-  }, [idActiveProject]);
-
-  useEffect(() => {
-    if (setTextareaValue) {
-      setTextareaValue('');
-    }
-    if (setTitleValue) {
-      setTitleValue('');
-    }
-    if (setSelectValue && selectedTodo) {
-      setSelectValue(selectedTodo.importance);
-    } else {
-      setSelectValue!('Low');
-    }
-  }, [createTodo, isVisible]);
-
   return (
-    <div className="overscroll-x-none overflow-x-hidden">
-      <Header />
-      <div className="flex py-2  items-center  overflow-hidden w-screen h-screen relative ">
-        <Sidebar />
+    <div className="overscroll-x-none overflow-x-hidden bg-slate-100">
+      <Header value="Home" />
+      <HomePageWrapper>
         {isLoading ? (
           <Loader />
-        ) : idActiveProject ? (
-          <Content
-            blocks={blocks}
-            dragDropHandler={dragDropHandler}
-            dragEndHandler={dragEndHandler}
-            dragStartHandler={dragStartHandler}
-            dragOverHandler={dragOverHandler}
-            dragEnterHandler={dragEnterHandler}
-            dragLeaveHandler={dragLeaveHandler}
-          />
         ) : (
-          <div>none</div>
+          <>
+            <h1 className="mb-2 text-2xl">Your Projects:</h1>
+            <HomeProjectWrapper>
+              {projects.map((item) => {
+                return (
+                  <ProjectBlockHomeWrapper key={uuid4v()} onClick={() => projectClick(item)}>
+                    <div className="w-full flex justify-end px-2 py-2">
+                      <DeleteProjectByHomeWrapper
+                        icon={faTrash}
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          trashOnClick(item.id);
+                        }}
+                      />
+                    </div>
+                    <h1>Name project: {item.name}</h1>
+                    <p>Tasks count: {item.count}</p>
+                  </ProjectBlockHomeWrapper>
+                );
+              })}
+              <ProjectBlockHomeWrapper onClick={addProjectClick}>
+                <h1 className="text-2xl">+</h1>
+              </ProjectBlockHomeWrapper>
+              {isCreateProject && <PopupCreateProject getProjectData={getProjectData} />}
+            </HomeProjectWrapper>
+          </>
         )}
-
-        {createTodo && (
-          <Popup
-            titleInputChangeHandler={titleInputChangeHandler}
-            textareaChangeHandler={textareaChangeHandler}
-            selectChangeHandler={selectChangeHandler}
-            setCreateTodo={setCreateTodo}
-            createTodo={createTodo}
-            selectValue={selectValue}
-            submitButtonHandler={submitButtonHandler}
-          />
-        )}
-        {isVisible && (
-          <Popup
-            titleInputChangeHandler={titleInputChangeHandler}
-            textareaChangeHandler={textareaChangeHandler}
-            selectChangeHandler={selectChangeHandler}
-            selectValue={selectValue}
-            deleteButtonHandler={deleteButtonHandler}
-            updateButtonHandler={updateButtonHandler}
-            selectedTodo={selectedTodo}
-          />
-        )}
-        {isCreateProject && <PopupCreateProject getProjectData={getProjectData} />}
-        {isSetting && <PopupCreateProject getProjectData={getProjectData} />}
-      </div>
+      </HomePageWrapper>
     </div>
   );
 }

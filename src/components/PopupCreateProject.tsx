@@ -9,10 +9,12 @@ import {
   where
 } from 'firebase/firestore';
 import React from 'react';
+import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
 import { db } from '../firebase/firebaseConfig';
 import { FormTodoAndProjectWrapper } from './FormTodoAndProject/FormTodoAndProjectStyled';
 import NameProjectInput from './NameProjectInput/NameProjectInput';
+import { PopupSVGWrapper } from './PopupSvg/PopupSVGWrapper';
 import { PopupBackgroundWrapper } from './PopupWrapper/PopupBackgroundStyled';
 import { PopupWrapper } from './PopupWrapper/PopupWrapperStyled';
 import ProjectButtons from './ProjectButtons';
@@ -29,7 +31,8 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
     isSetting,
     setIsSetting,
     isCreateProject,
-    idActiveProject
+    idActiveProject,
+    setIdActiveProject
   } = useForm();
   const email = localStorage.getItem('email');
 
@@ -38,7 +41,8 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
     if (nameProject) {
       await addDoc(collection(db, 'projects'), {
         name: nameProject,
-        email: `${email?.toLocaleLowerCase()}`
+        email: `${email?.toLocaleLowerCase()}`,
+        Count: 0
       });
       setIsCreateProject(false);
       getProjectData!();
@@ -49,6 +53,7 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
 
   const deleteDocumentById = async (id: string) => {
     await deleteDoc(doc(db, 'todo', id));
+    setIdActiveProject('');
   };
 
   const deleteButtonHandler = async (event: React.MouseEvent) => {
@@ -61,6 +66,7 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
     });
     await deleteDoc(doc(db, 'projects', idActiveProject));
     setIsSetting(false);
+    setIdActiveProject('');
     getProjectData!();
   };
 
@@ -85,6 +91,13 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
   return (
     <PopupBackgroundWrapper>
       <PopupWrapper>
+        <PopupSVGWrapper>
+          <CloseSVG
+            closeButtonHandlerByCreate={closeButtonHandlerByCreate}
+            closeButtonHandlerBySetting={closeButtonHandlerBySetting}
+            isCreateProject={isCreateProject}
+          />
+        </PopupSVGWrapper>
         <FormTodoAndProjectWrapper>
           <NameProjectInput nameProjectInputHandler={nameProjectInputHandler} />
           <ProjectButtons
@@ -93,8 +106,6 @@ const PopupCreateProject: React.FC<IPopupCreateProject> = ({ getProjectData }) =
             renameButtonHandler={renameButtonHandler}
             addButtonHandler={addButtonHandler}
             isCreateProject={isCreateProject}
-            closeButtonHandlerByCreate={closeButtonHandlerByCreate}
-            closeButtonHandlerBySetting={closeButtonHandlerBySetting}
           />
         </FormTodoAndProjectWrapper>
       </PopupWrapper>

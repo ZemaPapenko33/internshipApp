@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { useForm } from '../context';
 import { RootState } from '../store';
@@ -28,11 +28,21 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
   dragStartHandler,
   dragEndHandler
 }) => {
-  const { searchTodo } = useForm();
+  const { searchTodo, filterLabels } = useForm();
   const filterTodo = useSelector((state: RootState) => selectFilteredTodos(state, item));
-  const filteredTodos = searchTodo.length
-    ? filterTodo.filter((todo) => todo.title.toLowerCase().includes(searchTodo.toLowerCase()))
-    : filterTodo;
+  const filteredTodos = useMemo(() => {
+    let tempFilteredTodos = searchTodo.length
+      ? filterTodo.filter((todo) => todo.title.toLowerCase().includes(searchTodo.toLowerCase()))
+      : filterTodo;
+
+    if (filterLabels) {
+      tempFilteredTodos = tempFilteredTodos.filter((todo) =>
+        todo.Labels.some((label) => filterLabels.includes(label))
+      );
+    }
+
+    return tempFilteredTodos;
+  }, [filterTodo, searchTodo, filterLabels]);
 
   return (
     <SectionWrapper>
@@ -55,6 +65,7 @@ const TodoSection: React.FC<ITodoSectionProps> = ({
               dragStartHandler={dragStartHandler}
               dragEndHandler={dragEndHandler}
               key={newItem.id}
+              labels={newItem.Labels}
             />
           );
         })}
