@@ -13,12 +13,13 @@ import { HeaderRightWrapper } from '../HeaderRight/HeaderRightWrapper';
 import HomeButton from '../HomeButton/HomeButton';
 import LogoutButton from '../LogoutButton/LogoutButton';
 import SearchTodoInput from '../SearchTodoInput/SearchTodoInput';
+import { v4 as uuidv4 } from 'uuid';
 
 export const HeaderForProject = () => {
   const { setCreateTodo } = useProjectPage();
   const { setIdActiveProject, setSearchTodo, idActiveProject, setFilterLabels } = useForm();
   const navigateToLoginPage = useNavigate();
-  const Labels = useSelector((state: RootState) => state.labelsSlice.labels);
+  const labels = useSelector((state: RootState) => state.labelsSlice.labels);
 
   const logOutHandler = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -40,7 +41,7 @@ export const HeaderForProject = () => {
     setSearchTodo(event.target.value);
   };
 
-  const HomeClick = () => {
+  const homeClick = () => {
     navigateToLoginPage('/');
   };
 
@@ -62,9 +63,9 @@ export const HeaderForProject = () => {
           onChange={selectLabelsChange}
         >
           <option value="">All</option>
-          {Labels.map((label, index) => {
+          {labels.map((label) => {
             return (
-              <option key={index} value={label.idLabel}>
+              <option key={uuidv4()} value={label.idLabel}>
                 {label.labelName}
               </option>
             );
@@ -74,7 +75,7 @@ export const HeaderForProject = () => {
       <HeaderRightWrapper>
         {idActiveProject ? <AssistantButton assistantHandler={assistantHandler} /> : null}
         <CreateButton createButtonHandler={createButtonHandler} />
-        <HomeButton HomeClick={HomeClick} />
+        <HomeButton HomeClick={homeClick} />
         <LogoutButton logOutHandler={logOutHandler} />
       </HeaderRightWrapper>
     </>

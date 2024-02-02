@@ -9,15 +9,16 @@ interface INameProjectInput {
 
 const NameProjectInput: React.FC<INameProjectInput> = ({ nameProjectInputHandler }) => {
   const { isSetting, idActiveProject } = useForm();
-  const Project = useSelector((state: RootState) => state.projectSlice.projects).filter(
-    (project) => project.id === idActiveProject
+  const project = useSelector((state: RootState) => state.projectSlice.projects).filter(
+    (projects) => projects.id === idActiveProject
   );
+
   return (
     <NameProjectInputWrapper
       type="text"
       placeholder="Name project"
       onChange={nameProjectInputHandler}
-      value={isSetting ? Project[0].name : ''}
+      defaultValue={isSetting ? project[0].name : ''}
     />
   );
 };

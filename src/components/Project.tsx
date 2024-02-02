@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SettingSVG from '../assets/SettingSVG';
 import ButtonSettings from './ButtonSettings/ButtonSettings';
@@ -18,14 +18,13 @@ interface IProject {
 
 const Project: React.FC<IProject> = ({ setIdActiveProject, item, setIsSetting }) => {
   const history = useNavigate();
-
   const settingButtonHandler = () => {
     setIsSetting(true);
   };
-  const setIdActiveProjectHandler = () => {
+  const setIdActiveProjectHandler = useCallback(() => {
     setIdActiveProject(`${item.id}`);
     history(`/project/${item.id}`);
-  };
+  }, [setIdActiveProject, history, item.id]);
 
   return (
     <div onClick={setIdActiveProjectHandler}>

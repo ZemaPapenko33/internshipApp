@@ -1,6 +1,7 @@
 import React, { RefObject } from 'react';
 import TypingLoader from '../TypingLoader/TypingLoader';
 import { AiChatBlockWrapper } from './AiChatBlockStyled';
+import { v4 as uuidv4 } from 'uuid';
 
 interface IMessage {
   role: string;
@@ -8,7 +9,7 @@ interface IMessage {
 }
 
 interface IAiChat {
-  chatHistory: IMessage[];
+  chatHistory: Array<IMessage>;
   isWaitResponse: boolean;
   messagesEndRef: RefObject<HTMLDivElement>;
 }
@@ -16,9 +17,9 @@ interface IAiChat {
 const AiChatBlock: React.FC<IAiChat> = ({ chatHistory, isWaitResponse, messagesEndRef }) => {
   return (
     <AiChatBlockWrapper>
-      {chatHistory.map((message, index) => (
+      {chatHistory.map((message) => (
         <div
-          key={index}
+          key={uuidv4()}
           className={
             message.role === 'user'
               ? ' self-end bg-blue-300 rounded py-2 px-2 max-w-[45%] mb-2 '

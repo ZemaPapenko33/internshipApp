@@ -11,6 +11,7 @@ const CreateProjectButton: React.FC<ICreateProjectButton> = ({ children, setIsCr
     event.preventDefault();
     setIsCreateProject(true);
   };
+
   return (
     <CreateProjectButtonWrapper onClick={onClickHandler}>{children}</CreateProjectButtonWrapper>
   );

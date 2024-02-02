@@ -2,7 +2,7 @@ import React from 'react';
 import { HomeButtonWrapper } from './HomeButtonStyled';
 
 interface IHomeButton {
-  HomeClick: () => void;
+  HomeClick: VoidFunction;
 }
 
 const HomeButton: React.FC<IHomeButton> = ({ HomeClick }) => {

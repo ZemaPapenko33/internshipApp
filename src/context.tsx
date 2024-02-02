@@ -20,7 +20,7 @@ interface IFormContext {
   idActiveProject: string;
   isSetting: boolean;
   searchLabel: string;
-  selectedLabels: ISelectedLabels[];
+  selectedLabels: Array<ISelectedLabels>;
   filterLabels: string;
   setFilterLabels: React.Dispatch<React.SetStateAction<string>>;
   setCreateTodo: React.Dispatch<React.SetStateAction<boolean>>;

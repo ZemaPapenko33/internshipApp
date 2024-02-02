@@ -16,7 +16,7 @@ interface IHomePageHook {
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   projectClick: (item: IProjectPayload) => void;
   trashOnClick: (id: string) => void;
-  addProjectClick: () => void;
+  addProjectClick: VoidFunction;
 }
 
 function useHomePage(): IHomePageHook {

@@ -8,6 +8,7 @@ interface IProjectBlock {
 
 const ProjectBlock: React.FC<IProjectBlock> = ({ children, projectId }) => {
   const { idActiveProject } = useForm();
+
   return (
     <ProjectBlockWrapper
       className={projectId === idActiveProject ? 'border-l-[5px] border-blue-500' : ''}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { useForm } from '../../context';
 import { DeleteIcon } from '../deleteLabels/DeleteLabels';
 import { LabelInTextareaWrapper } from '../LabelInTextarea/LabelInTextareaStyled';
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../store';
 import { removeLabelById } from '../../store/slices/todoSlice';
 import { InputForSearchLabelWrapper } from '../inputForSearchLabel/InputForSearchLabelStyled';
+import { v4 as uuidv4 } from 'uuid';
 
 interface ITodoPayload {
   status: string;
@@ -15,12 +16,11 @@ interface ITodoPayload {
   description: string;
   importance: string;
   id: string;
-  Labels: string[];
+  Labels: Array<string>;
 }
 
 interface ITextAreaLabels {
-  onFocusInLabels: () => void;
-  onBlurInLabels: () => void;
+  onFocusInLabels: VoidFunction;
   onChangeLabels: (event: React.ChangeEvent<HTMLInputElement>) => void;
   selectedTodo?: ITodoPayload | null;
 }
@@ -28,37 +28,39 @@ interface ITextAreaLabels {
 const DivLabels: React.FC<ITextAreaLabels> = ({
   onFocusInLabels,
   onChangeLabels,
-  // onBlurInLabels,
   selectedTodo
 }) => {
   const { selectedLabels, setSelectedLabels } = useForm();
   const allLabels = useSelector((state: RootState) => state.labelsSlice.labels);
-  const selectedTodoLabels = allLabels.filter(
-    (label) => selectedTodo?.Labels?.includes(label.idLabel)
-  );
+  const selectedTodoLabels = useMemo(() => {
+    return allLabels.filter((label) => selectedTodo?.Labels?.includes(label.idLabel));
+  }, [allLabels, selectedTodo]);
   const dispatch = useDispatch();
 
-  const deleteIconClickHandler = (id: string) => {
-    const newSelectedLabels = selectedLabels.filter((label) => label.id !== id);
-    if (selectedTodo) {
-      dispatch(removeLabelById({ id: selectedTodo.id, labelId: id }));
-    }
-    setSelectedLabels(newSelectedLabels);
-  };
+  const deleteIconClickHandler = useCallback(
+    (id: string) => {
+      const newSelectedLabels = selectedLabels.filter((label) => label.id !== id);
+      if (selectedTodo) {
+        dispatch(removeLabelById({ id: selectedTodo.id, labelId: id }));
+      }
+      setSelectedLabels(newSelectedLabels);
+    },
+    [selectedLabels, selectedTodo, dispatch]
+  );
 
   return (
     <DivForLabelsWrapper onFocus={onFocusInLabels}>
-      {selectedTodoLabels?.map((item, index) => {
+      {selectedTodoLabels?.map((item) => {
         return (
-          <LabelInTextareaWrapper key={index} contentEditable={false}>
+          <LabelInTextareaWrapper key={uuidv4()} contentEditable={false}>
             {item.labelName}
             <DeleteIcon icon={faXmark} onClick={() => deleteIconClickHandler(item.idLabel)} />
           </LabelInTextareaWrapper>
         );
       })}
-      {selectedLabels.map((item, index) => {
+      {selectedLabels.map((item) => {
         return (
-          <LabelInTextareaWrapper key={index} contentEditable={false}>
+          <LabelInTextareaWrapper key={uuidv4()} contentEditable={false}>
             {item.name}
             <DeleteIcon icon={faXmark} onClick={() => deleteIconClickHandler(item.id)} />
           </LabelInTextareaWrapper>

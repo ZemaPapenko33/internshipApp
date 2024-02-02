@@ -13,10 +13,17 @@ import { useForm } from '../context';
 import { BackArrow } from '../components/BackArrowIcon/BackArrowIconStyled';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store';
+import { v4 as uuidv4 } from 'uuid';
+import RobotSVG from '../assets/RobotSVG';
 
-const AiPage = () => {
+interface IChatHistory {
+  role: string;
+  content: string;
+}
+
+const AssistantPage = () => {
   const [questionChatGPT, setQuestionChatGPT] = useState<string>('');
-  const [chatHistory, setChatHistory] = useState<Array<{ role: string; content: string }>>([]);
+  const [chatHistory, setChatHistory] = useState<Array<IChatHistory>>([]);
   const [isWaitResponse, setIsWaitResponse] = useState<boolean>(false);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -120,8 +127,6 @@ const AiPage = () => {
 
   useEffect(() => {
     const projectActiveId = localStorage.getItem('projectActiveId')!;
-    console.log(projectActiveId, '111');
-    console.log(todosProject);
     if (projectActiveId) {
       setIdActiveProject(projectActiveId);
     }
@@ -138,10 +143,10 @@ const AiPage = () => {
           <BackArrow icon={faArrowLeft} />
           Back to project
         </div>
-        {todosProject.map((todo, index) => {
+        {todosProject.map((todo) => {
           return (
             <div
-              key={index}
+              key={uuidv4()}
               className="px-2 py-2 hover:bg-blue-700 rounded cursor-pointer"
               onClick={() => todoClickHandler(todo)}
             >
@@ -159,22 +164,7 @@ const AiPage = () => {
           />
         ) : (
           <div className="w-full h-[85%] flex flex-col items-center justify-center">
-            <svg
-              style={{
-                width: '5rem',
-                height: '5rem',
-                verticalAlign: 'middle',
-                fill: 'currentColor',
-                overflow: 'hidden'
-              }}
-              viewBox="0 0 1024 1024"
-              version="1.1"
-            >
-              <path d="M981.333333 618.666667h-106.666666v-21.333334a298.666667 298.666667 0 0 0-118.186667-244.053333l103.893333-162.986667a64 64 0 1 0-36.053333-23.04l-103.04 162.133334A416.213333 416.213333 0 0 0 512 277.333333a416.213333 416.213333 0 0 0-209.28 52.053334l-103.04-162.133334a64 64 0 1 0-36.053333 23.04l103.893333 162.986667A298.666667 298.666667 0 0 0 149.333333 597.333333v21.333334H42.666667v256h106.666666v85.333333h725.333334v-85.333333h106.666666zM85.333333 832v-170.666667h64v170.666667z m746.666667 85.333333H192V597.333333c0-192 160.64-277.333333 320-277.333333s320 85.333333 320 277.333333v320z m106.666667-85.333333h-64v-170.666667h64z" />
-              <path d="M405.333333 661.333333m-42.666666 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" />
-              <path d="M618.666667 661.333333m-42.666667 0a42.666667 42.666667 0 1 0 85.333333 0 42.666667 42.666667 0 1 0-85.333333 0Z" />
-              <path d="M661.333333 533.333333H362.666667a128 128 0 0 0 0 256h298.666666a128 128 0 0 0 0-256z m0 213.333334H362.666667a85.333333 85.333333 0 0 1 0-170.666667h298.666666a85.333333 85.333333 0 0 1 0 170.666667z" />
-            </svg>
+            <RobotSVG />
             How i can help you today?
           </div>
         )}
@@ -196,4 +186,4 @@ const AiPage = () => {
   );
 };
 
-export default AiPage;
+export default AssistantPage;

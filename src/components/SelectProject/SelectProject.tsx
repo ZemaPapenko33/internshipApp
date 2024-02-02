@@ -1,5 +1,6 @@
 import React from 'react';
 import { useForm } from '../../context';
+import { v4 as uuid4v } from 'uuid';
 
 interface IProjectPayload {
   name: string;
@@ -19,16 +20,16 @@ const SelectProject: React.FC<ISelectProject> = ({ onChangeProjectSelect, projec
       <label htmlFor="projectSelect">Project:</label>
       <select className="border-2 mb-2" id="projectSelect" onChange={onChangeProjectSelect}>
         <option value="none">None</option>
-        {projectsCreate.map((project, index) => {
+        {projectsCreate.map((project) => {
           if (nameProject === project.name) {
             return (
-              <option key={index} value={project.id} selected>
+              <option key={uuid4v()} value={project.id} selected>
                 {project.name}
               </option>
             );
           }
           return (
-            <option key={index} value={project.id}>
+            <option key={uuid4v()} value={project.id}>
               {project.name}
             </option>
           );

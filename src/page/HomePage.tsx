@@ -14,6 +14,7 @@ import useHomePage from '../hooks/use-home-page.hook';
 import useProjectPage from '../hooks/use-project-page.hook';
 import { MyRoutes } from '../shared/enum';
 import { RootState } from '../store';
+import { v4 as uuid4v } from 'uuid';
 
 function HomePage(): JSX.Element {
   const navigateToLoginPage = useNavigate();
@@ -44,9 +45,9 @@ function HomePage(): JSX.Element {
           <>
             <h1 className="mb-2 text-2xl">Your Projects:</h1>
             <HomeProjectWrapper>
-              {projects.map((item, index) => {
+              {projects.map((item) => {
                 return (
-                  <ProjectBlockHomeWrapper key={index} onClick={() => projectClick(item)}>
+                  <ProjectBlockHomeWrapper key={uuid4v()} onClick={() => projectClick(item)}>
                     <div className="w-full flex justify-end px-2 py-2">
                       <DeleteProjectByHomeWrapper
                         icon={faTrash}

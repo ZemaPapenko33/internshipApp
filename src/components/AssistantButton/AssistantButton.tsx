@@ -2,7 +2,7 @@ import React from 'react';
 import { AssistantButtonWrapper } from './AssistantButtonStyled';
 
 interface IAssistantButton {
-  assistantHandler: () => void;
+  assistantHandler: VoidFunction;
 }
 
 const AssistantButton: React.FC<IAssistantButton> = ({ assistantHandler }) => {

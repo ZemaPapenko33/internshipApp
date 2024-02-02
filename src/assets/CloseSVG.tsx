@@ -1,11 +1,11 @@
 import React from 'react';
 
 interface ICloseSVG {
-  closeButtonHandlerByCreateTodo?: () => void;
-  closeButtonHandlerByIsVisible?: () => void;
+  closeButtonHandlerByCreateTodo?: VoidFunction;
+  closeButtonHandlerByIsVisible?: VoidFunction;
   createTodo?: boolean;
-  closeButtonHandlerByCreate?: () => void;
-  closeButtonHandlerBySetting?: () => void;
+  closeButtonHandlerByCreate?: VoidFunction;
+  closeButtonHandlerBySetting?: VoidFunction;
   isCreateProject?: boolean;
   isVisible?: boolean;
 }

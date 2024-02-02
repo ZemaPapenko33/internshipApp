@@ -164,6 +164,7 @@ function useProjectPage(): IProjectPageHook {
     setIsLoading(false);
     setIsVisible(false);
   };
+
   const getProjectData = async () => {
     dispatch(setProject([]));
     const projectRef = collection(db, 'projects');

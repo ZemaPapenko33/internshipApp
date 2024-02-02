@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CloseSVG from '../assets/CloseSVG';
 import { useForm } from '../context';
@@ -28,7 +28,7 @@ interface ITodoPayload {
   description: string;
   importance: string;
   id: string;
-  Labels: string[];
+  Labels: Array<string>;
 }
 
 interface IPopup {
@@ -74,11 +74,12 @@ const Popup: React.FC<IPopup> = ({
   const [projectsCreate, setProjectsCreate] = useState(projects);
   const dispatch = useDispatch();
   const [isPlusButtonClicked, setIsPlusButtonClicked] = useState<boolean>(false);
-  const [selectedProject, setSelectedProject] = useState<string>('');
   const [isLabelsClick, setIsLabelsClick] = useState<boolean>(false);
-  const labelsFiltered = searchLabel.length
-    ? labels.filter((label) => label.labelName.toLowerCase().includes(searchLabel.toLowerCase()))
-    : labels;
+  const labelsFiltered = useMemo(() => {
+    return searchLabel.length
+      ? labels.filter((label) => label.labelName.toLowerCase().includes(searchLabel.toLowerCase()))
+      : labels;
+  }, [labels, searchLabel]);
 
   const closeButtonHandlerByIsVisible = () => {
     setIsVisible(false);
@@ -92,7 +93,6 @@ const Popup: React.FC<IPopup> = ({
   };
 
   const onChangeProjectSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setSelectedProject(event.target.value);
     setIdActiveProject(event.target.value);
   };
 
@@ -105,7 +105,7 @@ const Popup: React.FC<IPopup> = ({
     };
     setProjectsCreate([...projectsCreate, newProject]);
     setIsCreateProject(false);
-    setSelectedProject(newProject.id);
+    setIdActiveProject(newProject.id);
     setIsPlusButtonClicked(true);
   };
 
@@ -114,13 +114,8 @@ const Popup: React.FC<IPopup> = ({
     setSearchLabel('');
   };
 
-  const onBlurInLabelsDiv = () => {
-    setIsLabelsClick(false);
-  };
-
   const onChangeLabels = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchLabel(event.target.value);
-    console.log(labelsFiltered.length);
   };
 
   const onClickLabels = (item: { name: string; id: string }) => {
@@ -164,7 +159,6 @@ const Popup: React.FC<IPopup> = ({
           <DivLabels
             onFocusInLabels={onFocusInLabelsDiv}
             onChangeLabels={onChangeLabels}
-            onBlurInLabels={onBlurInLabelsDiv}
             selectedTodo={selectedTodo}
           />
           {isLabelsClick && (
@@ -174,7 +168,7 @@ const Popup: React.FC<IPopup> = ({
               labelsFiltered={labelsFiltered}
             />
           )}
-          {(selectedProject || idActiveProject) && (
+          {idActiveProject && (
             <TodoButtons
               isVisible={isVisible}
               createTodo={createTodo!}
